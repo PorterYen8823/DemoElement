@@ -127,6 +127,8 @@ namespace Demo1
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.btnAddRow = new System.Windows.Forms.Button();
+            this.btnCylceRunAssign = new System.Windows.Forms.Button();
+            this.lbleCycleRun = new System.Windows.Forms.Label();
             this.gBoxGlobals.SuspendLayout();
             this.gBoxRunTasks.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -1164,11 +1166,32 @@ namespace Demo1
             this.btnAddRow.UseVisualStyleBackColor = true;
             this.btnAddRow.Click += new System.EventHandler(this.btnAddRow_Click);
             // 
+            // btnCylceRunAssign
+            // 
+            this.btnCylceRunAssign.Location = new System.Drawing.Point(1609, 753);
+            this.btnCylceRunAssign.Name = "btnCylceRunAssign";
+            this.btnCylceRunAssign.Size = new System.Drawing.Size(157, 31);
+            this.btnCylceRunAssign.TabIndex = 63;
+            this.btnCylceRunAssign.Text = "Cycle Run";
+            this.btnCylceRunAssign.UseVisualStyleBackColor = true;
+            this.btnCylceRunAssign.Click += new System.EventHandler(this.btnCylceRunAssign_Click);
+            // 
+            // lbleCycleRun
+            // 
+            this.lbleCycleRun.AutoSize = true;
+            this.lbleCycleRun.Location = new System.Drawing.Point(1620, 787);
+            this.lbleCycleRun.Name = "lbleCycleRun";
+            this.lbleCycleRun.Size = new System.Drawing.Size(129, 20);
+            this.lbleCycleRun.TabIndex = 64;
+            this.lbleCycleRun.Text = "Cycle Run=False";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1809, 970);
+            this.Controls.Add(this.lbleCycleRun);
+            this.Controls.Add(this.btnCylceRunAssign);
             this.Controls.Add(this.btnAddRow);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.button10);
@@ -1349,6 +1372,8 @@ namespace Demo1
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button btnAddRow;
+        private System.Windows.Forms.Button btnCylceRunAssign;
+        private System.Windows.Forms.Label lbleCycleRun;
     }
 }
 

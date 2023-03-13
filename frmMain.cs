@@ -72,7 +72,7 @@ namespace Demo1
 
         };
 
-        List<ProcessFinishTbl> FinishArea = new List<ProcessFinishTbl>();
+        static List<ProcessFinishTbl> FinishArea = new List<ProcessFinishTbl>();
 
        static List<BlowAirStage> WorkingBlowStage = new List<BlowAirStage>
         {
@@ -657,6 +657,11 @@ namespace Demo1
         static void ContinueActionControl()
         {
             DumpSystemStatus();
+            if (ContinueAction == false)
+            {
+                SendUdpMessage("Please press Single Continue button!");
+            }
+            
             SpinWait.SpinUntil(() => ContinueAction, -1);
             if (ContinueActionMode == false)
             {
@@ -713,7 +718,7 @@ namespace Demo1
             
 
             // 3.LaserMeasurementHeight = Get LaserMeasurement Value
-            SendUdpMessage("AE01​ 3.LaserMeasurementHeight");
+            SendUdpMessage("AE01 3.LaserMeasurementHeight");
             TextBoxTextAppendChange("txtLog", "3.LaserMeasurementHeight = Get LaserMeasurement Value ");
             LaserMeasureValue = 10.33;
 
@@ -1111,6 +1116,18 @@ namespace Demo1
             {
                 SelectProcessArea.PlaceOrThrowFinished = 1;
                 robotNozzleHaveElement = false;
+
+                // 將完成資料寫入  FinishArea
+                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
+                processFinishRow.Id = SelectProcessArea.ElementId;
+                processFinishRow.CcdX = 0;
+                processFinishRow.CcdY = 0;
+                processFinishRow.CcdZ = 0;
+                processFinishRow.Finished = 1;
+                processFinishRow.FinishDateTime = DateTime.Now;
+                processFinishRow.Go_NG = SelectProcessArea.Go_NG;
+                FinishArea.Add(processFinishRow);
+
             }
 
             SendUdpMessage("----- AE04 -----");
@@ -1152,6 +1169,19 @@ namespace Demo1
             {
                 myProcessArea.PlaceOrThrowFinished = 1;
                 robotNozzleHaveElement = false;
+
+                // 將完成資料寫入  FinishArea
+                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
+                processFinishRow.Id = myProcessArea.ElementId;
+                processFinishRow.CcdX = 0;
+                processFinishRow.CcdY = 0;
+                processFinishRow.CcdZ = 0;
+                processFinishRow.Finished = 1;
+                processFinishRow.FinishDateTime = DateTime.Now;
+                processFinishRow.Go_NG = myProcessArea.Go_NG;
+
+                FinishArea.Add(processFinishRow);
+
             }
             SendUdpMessage("----- AE05 -----");
             SendUdpMessage("");
@@ -1226,7 +1256,7 @@ namespace Demo1
             while ((!cancelTokenSourceAutoRun.IsCancellationRequested))
             {
                 // 如有 BlowAir 有要 pick, 先處理
-
+                SendUdpMessage("***** AutoRun Loop");
                 var myWorkingBlowStagePick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
                 if (myWorkingBlowStagePick != null)
                 {      
@@ -1315,7 +1345,9 @@ namespace Demo1
                             {
                                 //break;
                                 Console.WriteLine("No element to process");
-                                SpinWait.SpinUntil(() => true, 1500);
+                                SendUdpMessage("No element to process, please assign Data " + DateTime.Now.ToString("HH:mm:ss.fff"));
+                                SpinWait.SpinUntil(() => false, TimeSpan.FromSeconds(2));
+                                SendUdpMessage("No element to process, please assign Data " + DateTime.Now.ToString("HH:mm:ss.fff"));
                             }
 
                         }
@@ -1328,13 +1360,13 @@ namespace Demo1
                             if (CycleAutoRun)
                             {
                                 ResetTestData();
-                                SpinWait.SpinUntil(() => true, 2500);
+                                SpinWait.SpinUntil(() => false, 2500);
                             }
                         }
 
                     }
                 }
-                SpinWait.SpinUntil(() => true, 500);
+                SpinWait.SpinUntil(() => false, 500);
                 Application.DoEvents();
 
             }
@@ -1374,6 +1406,18 @@ namespace Demo1
 
             jsonString = JsonConvert.SerializeObject(WorkingBlowStage, Formatting.Indented);
             fileName = Path.Combine(@"c:\temp\", "WorkingBlowStage.Json");
+
+            try
+            {
+                File.WriteAllText(fileName, jsonString);
+            }
+            catch { }
+            {
+
+            }
+
+            jsonString = JsonConvert.SerializeObject(FinishArea, Formatting.Indented);
+            fileName = Path.Combine(@"c:\temp\", "FinishArea.Json");
 
             try
             {
@@ -1489,6 +1533,7 @@ namespace Demo1
 
         static void ResetTestData()
         {
+            FinishArea.Clear();
             foreach (var item in ProcessArea)
             {
                 item.PickFinished = 0;
@@ -1563,6 +1608,7 @@ namespace Demo1
                new ProcessAreaTbl { ElementId=7, CcdX = 40.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
 
             };
+            FinishArea.Clear();
             Random rnd = new Random();
 
             for (int i = 0; i < 2; i++)
@@ -1591,6 +1637,12 @@ namespace Demo1
             processFinishRow.Finished = 1;
             FinishArea.Add(processFinishRow);
 
+        }
+
+        private void btnCylceRunAssign_Click(object sender, EventArgs e)
+        {
+            CycleAutoRun = !CycleAutoRun;
+            lbleCycleRun.Text = "Cycle Run=" + CycleAutoRun.ToString();
         }
     }
 
@@ -1645,6 +1697,9 @@ namespace Demo1
         public double CcdY { get; set; }
         public double CcdZ { get; set; }
         public int Finished { get; set; }
+
+        public bool Go_NG { get; set; }
+        public DateTime FinishDateTime { get; set; }
     }
 
 
