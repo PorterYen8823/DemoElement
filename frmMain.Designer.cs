@@ -126,6 +126,7 @@ namespace Demo1
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
+            this.btnAddRow = new System.Windows.Forms.Button();
             this.gBoxGlobals.SuspendLayout();
             this.gBoxRunTasks.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -1046,7 +1047,7 @@ namespace Demo1
             // 
             // btnContinue
             // 
-            this.btnContinue.Location = new System.Drawing.Point(1459, 603);
+            this.btnContinue.Location = new System.Drawing.Point(1491, 605);
             this.btnContinue.Name = "btnContinue";
             this.btnContinue.Size = new System.Drawing.Size(92, 65);
             this.btnContinue.TabIndex = 52;
@@ -1091,7 +1092,7 @@ namespace Demo1
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1556, 603);
+            this.button2.Location = new System.Drawing.Point(1588, 605);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(92, 65);
             this.button2.TabIndex = 56;
@@ -1101,7 +1102,7 @@ namespace Demo1
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(1651, 603);
+            this.button9.Location = new System.Drawing.Point(1683, 605);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(92, 65);
             this.button9.TabIndex = 57;
@@ -1153,11 +1154,22 @@ namespace Demo1
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
+            // btnAddRow
+            // 
+            this.btnAddRow.Location = new System.Drawing.Point(1539, 676);
+            this.btnAddRow.Name = "btnAddRow";
+            this.btnAddRow.Size = new System.Drawing.Size(157, 31);
+            this.btnAddRow.TabIndex = 62;
+            this.btnAddRow.Text = "Add Row";
+            this.btnAddRow.UseVisualStyleBackColor = true;
+            this.btnAddRow.Click += new System.EventHandler(this.btnAddRow_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1809, 970);
+            this.Controls.Add(this.btnAddRow);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button11);
@@ -1336,6 +1348,7 @@ namespace Demo1
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button btnAddRow;
     }
 }
 

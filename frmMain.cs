@@ -1118,7 +1118,7 @@ namespace Demo1
             
             DumpSystemStatus();
         }
-        private async void BtnMovetoNGArea_Click(object sender, EventArgs e)
+        private  void BtnMovetoNGArea_Click(object sender, EventArgs e)
         {
              AE04_MvoeNgPosition(1);
 
@@ -1496,6 +1496,7 @@ namespace Demo1
             }
             DumpSystemStatus();
         }
+        
         private void btnResetData_Click(object sender, EventArgs e)
         {
             ResetTestData();         
@@ -1562,6 +1563,34 @@ namespace Demo1
                new ProcessAreaTbl { ElementId=7, CcdX = 40.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
 
             };
+            Random rnd = new Random();
+
+            for (int i = 0; i < 2; i++)
+            {
+                int ElementId = rnd.Next(0, ProcessArea.Count());
+                ProcessArea.Where(p => p.ElementId == ElementId).ToList().ForEach(x => x.Go_NG = false);
+            }
+
+        }
+
+        private void btnAddRow_Click(object sender, EventArgs e)
+        {
+            ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
+            processFinishRow.Id = 0;
+            processFinishRow.CcdX = 0;
+            processFinishRow.CcdY = 0;
+            processFinishRow.CcdZ = 0;
+            processFinishRow.Finished = 0;
+            FinishArea.Add(processFinishRow);
+
+            processFinishRow = new ProcessFinishTbl();
+            processFinishRow.Id = 1;
+            processFinishRow.CcdX = 0;
+            processFinishRow.CcdY = 0;
+            processFinishRow.CcdZ = 0;
+            processFinishRow.Finished = 1;
+            FinishArea.Add(processFinishRow);
+
         }
     }
 
