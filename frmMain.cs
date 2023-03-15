@@ -20,7 +20,6 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace Demo1
 {
-
     public partial class frmMain : Form
     {
         // Debug use
@@ -125,6 +124,8 @@ namespace Demo1
         public frmMain()
         {
             InitializeComponent();
+
+            Console.WriteLine("App start");
         }
       
         
