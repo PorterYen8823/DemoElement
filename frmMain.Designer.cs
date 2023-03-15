@@ -37,13 +37,6 @@ namespace Demo1
             this.btnProgramMode = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnTeachPoint = new System.Windows.Forms.Button();
-            this.gBoxGlobals = new System.Windows.Forms.GroupBox();
-            this.btnWrite = new System.Windows.Forms.Button();
-            this.btnRead = new System.Windows.Forms.Button();
-            this.txtVarValue = new System.Windows.Forms.TextBox();
-            this.cmbVars = new System.Windows.Forms.ComboBox();
-            this.lblValue = new System.Windows.Forms.Label();
-            this.lblVariableName = new System.Windows.Forms.Label();
             this.gBoxRunTasks = new System.Windows.Forms.GroupBox();
             this.btnCont = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -57,31 +50,6 @@ namespace Demo1
             this.btnServoOn = new System.Windows.Forms.Button();
             this.btnServoOff = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnReadg_CcdZ = new System.Windows.Forms.Button();
-            this.btnReadg_CcdY = new System.Windows.Forms.Button();
-            this.btnReadg_CcdX = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.txtg_CcdZ = new System.Windows.Forms.TextBox();
-            this.txtg_CcdY = new System.Windows.Forms.TextBox();
-            this.txtg_CcdX = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnBit12Off = new System.Windows.Forms.Button();
-            this.btnBit12On = new System.Windows.Forms.Button();
-            this.btnBit11Off = new System.Windows.Forms.Button();
-            this.btnBit11On = new System.Windows.Forms.Button();
-            this.btnBit1Off = new System.Windows.Forms.Button();
-            this.btnBit1On = new System.Windows.Forms.Button();
-            this.btnBit0Off = new System.Windows.Forms.Button();
-            this.btnBit0On = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.button7 = new System.Windows.Forms.Button();
-            this.btnFunctionRun = new System.Windows.Forms.Button();
             this.btnMovetoLaserMeasurement = new System.Windows.Forms.Button();
             this.btnCcdMoveDetectionElements = new System.Windows.Forms.Button();
             this.btnMovetoElementPickAndBlowWaitArea = new System.Windows.Forms.Button();
@@ -105,18 +73,17 @@ namespace Demo1
             this.txtStep3_g_CcdX = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.txtStep4_id = new System.Windows.Forms.TextBox();
+            this.txtStep6_id = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.txtStep5_id = new System.Windows.Forms.TextBox();
+            this.txtStep7_id = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.txtStep7_g_CcdY = new System.Windows.Forms.TextBox();
-            this.txtStep7_g_CcdX = new System.Windows.Forms.TextBox();
+            this.txtStep5_g_CcdY = new System.Windows.Forms.TextBox();
+            this.txtStep5_g_CcdX = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnAutoRun = new System.Windows.Forms.Button();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.btnContinue = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button8 = new System.Windows.Forms.Button();
             this.btnResetData = new System.Windows.Forms.Button();
@@ -129,11 +96,19 @@ namespace Demo1
             this.btnAddRow = new System.Windows.Forms.Button();
             this.btnCylceRunAssign = new System.Windows.Forms.Button();
             this.lbleCycleRun = new System.Windows.Forms.Label();
-            this.gBoxGlobals.SuspendLayout();
+            this.btnIsVirtualModel = new System.Windows.Forms.Button();
+            this.lblIsVirtualModel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblStageStatus = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.StageElementId1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.StageElementId2 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.RobotElementId = new System.Windows.Forms.Label();
             this.gBoxRunTasks.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExit
@@ -224,82 +199,6 @@ namespace Demo1
             this.btnTeachPoint.UseVisualStyleBackColor = true;
             this.btnTeachPoint.Click += new System.EventHandler(this.btnTeachPoint_Click);
             // 
-            // gBoxGlobals
-            // 
-            this.gBoxGlobals.Controls.Add(this.btnWrite);
-            this.gBoxGlobals.Controls.Add(this.btnRead);
-            this.gBoxGlobals.Controls.Add(this.txtVarValue);
-            this.gBoxGlobals.Controls.Add(this.cmbVars);
-            this.gBoxGlobals.Controls.Add(this.lblValue);
-            this.gBoxGlobals.Controls.Add(this.lblVariableName);
-            this.gBoxGlobals.Location = new System.Drawing.Point(18, 25);
-            this.gBoxGlobals.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gBoxGlobals.Name = "gBoxGlobals";
-            this.gBoxGlobals.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gBoxGlobals.Size = new System.Drawing.Size(426, 229);
-            this.gBoxGlobals.TabIndex = 0;
-            this.gBoxGlobals.TabStop = false;
-            this.gBoxGlobals.Text = "Read / Write Global Preserve variables";
-            // 
-            // btnWrite
-            // 
-            this.btnWrite.Location = new System.Drawing.Point(262, 165);
-            this.btnWrite.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnWrite.Name = "btnWrite";
-            this.btnWrite.Size = new System.Drawing.Size(122, 37);
-            this.btnWrite.TabIndex = 5;
-            this.btnWrite.Text = "Write";
-            this.btnWrite.UseVisualStyleBackColor = true;
-            this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
-            // 
-            // btnRead
-            // 
-            this.btnRead.Location = new System.Drawing.Point(36, 165);
-            this.btnRead.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnRead.Name = "btnRead";
-            this.btnRead.Size = new System.Drawing.Size(122, 37);
-            this.btnRead.TabIndex = 4;
-            this.btnRead.Text = "Read";
-            this.btnRead.UseVisualStyleBackColor = true;
-            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
-            // 
-            // txtVarValue
-            // 
-            this.txtVarValue.Location = new System.Drawing.Point(202, 106);
-            this.txtVarValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtVarValue.Name = "txtVarValue";
-            this.txtVarValue.Size = new System.Drawing.Size(180, 26);
-            this.txtVarValue.TabIndex = 3;
-            // 
-            // cmbVars
-            // 
-            this.cmbVars.FormattingEnabled = true;
-            this.cmbVars.Location = new System.Drawing.Point(202, 52);
-            this.cmbVars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cmbVars.Name = "cmbVars";
-            this.cmbVars.Size = new System.Drawing.Size(180, 28);
-            this.cmbVars.TabIndex = 1;
-            // 
-            // lblValue
-            // 
-            this.lblValue.AutoSize = true;
-            this.lblValue.Location = new System.Drawing.Point(32, 117);
-            this.lblValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblValue.Name = "lblValue";
-            this.lblValue.Size = new System.Drawing.Size(54, 20);
-            this.lblValue.TabIndex = 2;
-            this.lblValue.Text = "Value:";
-            // 
-            // lblVariableName
-            // 
-            this.lblVariableName.AutoSize = true;
-            this.lblVariableName.Location = new System.Drawing.Point(32, 57);
-            this.lblVariableName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblVariableName.Name = "lblVariableName";
-            this.lblVariableName.Size = new System.Drawing.Size(115, 20);
-            this.lblVariableName.TabIndex = 0;
-            this.lblVariableName.Text = "Variable name:";
-            // 
             // gBoxRunTasks
             // 
             this.gBoxRunTasks.Controls.Add(this.btnCont);
@@ -310,7 +209,7 @@ namespace Demo1
             this.gBoxRunTasks.Controls.Add(this.lblFuncToStart);
             this.gBoxRunTasks.Controls.Add(this.textBox1);
             this.gBoxRunTasks.Controls.Add(this.lblEvents);
-            this.gBoxRunTasks.Location = new System.Drawing.Point(18, 315);
+            this.gBoxRunTasks.Location = new System.Drawing.Point(18, 343);
             this.gBoxRunTasks.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gBoxRunTasks.Name = "gBoxRunTasks";
             this.gBoxRunTasks.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -416,7 +315,7 @@ namespace Demo1
             // 
             // btnServoOn
             // 
-            this.btnServoOn.Location = new System.Drawing.Point(19, 270);
+            this.btnServoOn.Location = new System.Drawing.Point(19, 298);
             this.btnServoOn.Name = "btnServoOn";
             this.btnServoOn.Size = new System.Drawing.Size(126, 37);
             this.btnServoOn.TabIndex = 11;
@@ -426,7 +325,7 @@ namespace Demo1
             // 
             // btnServoOff
             // 
-            this.btnServoOff.Location = new System.Drawing.Point(173, 270);
+            this.btnServoOff.Location = new System.Drawing.Point(173, 298);
             this.btnServoOff.Name = "btnServoOff";
             this.btnServoOff.Size = new System.Drawing.Size(89, 37);
             this.btnServoOff.TabIndex = 12;
@@ -436,7 +335,7 @@ namespace Demo1
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(307, 270);
+            this.button1.Location = new System.Drawing.Point(307, 298);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(93, 37);
             this.button1.TabIndex = 13;
@@ -444,294 +343,9 @@ namespace Demo1
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.btnReadg_CcdZ);
-            this.groupBox1.Controls.Add(this.btnReadg_CcdY);
-            this.groupBox1.Controls.Add(this.btnReadg_CcdX);
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.button4);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.txtg_CcdZ);
-            this.groupBox1.Controls.Add(this.txtg_CcdY);
-            this.groupBox1.Controls.Add(this.txtg_CcdX);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(696, 20);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(392, 166);
-            this.groupBox1.TabIndex = 18;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Position Info";
-            // 
-            // btnReadg_CcdZ
-            // 
-            this.btnReadg_CcdZ.Location = new System.Drawing.Point(303, 109);
-            this.btnReadg_CcdZ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnReadg_CcdZ.Name = "btnReadg_CcdZ";
-            this.btnReadg_CcdZ.Size = new System.Drawing.Size(74, 37);
-            this.btnReadg_CcdZ.TabIndex = 14;
-            this.btnReadg_CcdZ.Text = "Read";
-            this.btnReadg_CcdZ.UseVisualStyleBackColor = true;
-            this.btnReadg_CcdZ.Click += new System.EventHandler(this.btnReadg_CcdZ_Click);
-            // 
-            // btnReadg_CcdY
-            // 
-            this.btnReadg_CcdY.Location = new System.Drawing.Point(303, 67);
-            this.btnReadg_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnReadg_CcdY.Name = "btnReadg_CcdY";
-            this.btnReadg_CcdY.Size = new System.Drawing.Size(74, 37);
-            this.btnReadg_CcdY.TabIndex = 13;
-            this.btnReadg_CcdY.Text = "Read";
-            this.btnReadg_CcdY.UseVisualStyleBackColor = true;
-            this.btnReadg_CcdY.Click += new System.EventHandler(this.btnReadg_CcdY_Click);
-            // 
-            // btnReadg_CcdX
-            // 
-            this.btnReadg_CcdX.Location = new System.Drawing.Point(303, 25);
-            this.btnReadg_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnReadg_CcdX.Name = "btnReadg_CcdX";
-            this.btnReadg_CcdX.Size = new System.Drawing.Size(74, 37);
-            this.btnReadg_CcdX.TabIndex = 12;
-            this.btnReadg_CcdX.Text = "Read";
-            this.btnReadg_CcdX.UseVisualStyleBackColor = true;
-            this.btnReadg_CcdX.Click += new System.EventHandler(this.btnReadg_CcdX_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(211, 109);
-            this.button5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(84, 37);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Write";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(211, 69);
-            this.button4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(84, 37);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "Write";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(211, 27);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(84, 37);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Write";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // txtg_CcdZ
-            // 
-            this.txtg_CcdZ.Location = new System.Drawing.Point(106, 111);
-            this.txtg_CcdZ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtg_CcdZ.Name = "txtg_CcdZ";
-            this.txtg_CcdZ.Size = new System.Drawing.Size(97, 26);
-            this.txtg_CcdZ.TabIndex = 9;
-            // 
-            // txtg_CcdY
-            // 
-            this.txtg_CcdY.Location = new System.Drawing.Point(106, 71);
-            this.txtg_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtg_CcdY.Name = "txtg_CcdY";
-            this.txtg_CcdY.Size = new System.Drawing.Size(97, 26);
-            this.txtg_CcdY.TabIndex = 8;
-            // 
-            // txtg_CcdX
-            // 
-            this.txtg_CcdX.Location = new System.Drawing.Point(106, 34);
-            this.txtg_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtg_CcdX.Name = "txtg_CcdX";
-            this.txtg_CcdX.Size = new System.Drawing.Size(97, 26);
-            this.txtg_CcdX.TabIndex = 7;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 117);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 20);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "g_CcdZ:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 77);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 20);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "g_CcdY:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 40);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 20);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "g_CcdX:";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.btnBit12Off);
-            this.groupBox2.Controls.Add(this.btnBit12On);
-            this.groupBox2.Controls.Add(this.btnBit11Off);
-            this.groupBox2.Controls.Add(this.btnBit11On);
-            this.groupBox2.Controls.Add(this.btnBit1Off);
-            this.groupBox2.Controls.Add(this.btnBit1On);
-            this.groupBox2.Controls.Add(this.btnBit0Off);
-            this.groupBox2.Controls.Add(this.btnBit0On);
-            this.groupBox2.Location = new System.Drawing.Point(696, 212);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(322, 228);
-            this.groupBox2.TabIndex = 19;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Memory Bit";
-            // 
-            // btnBit12Off
-            // 
-            this.btnBit12Off.Location = new System.Drawing.Point(182, 168);
-            this.btnBit12Off.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit12Off.Name = "btnBit12Off";
-            this.btnBit12Off.Size = new System.Drawing.Size(120, 37);
-            this.btnBit12Off.TabIndex = 17;
-            this.btnBit12Off.Tag = "12";
-            this.btnBit12Off.Text = "Bit_12 Off";
-            this.btnBit12Off.UseVisualStyleBackColor = true;
-            this.btnBit12Off.Click += new System.EventHandler(this.btnBit0Off_Click);
-            // 
-            // btnBit12On
-            // 
-            this.btnBit12On.Location = new System.Drawing.Point(43, 168);
-            this.btnBit12On.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit12On.Name = "btnBit12On";
-            this.btnBit12On.Size = new System.Drawing.Size(120, 37);
-            this.btnBit12On.TabIndex = 16;
-            this.btnBit12On.Tag = "12";
-            this.btnBit12On.Text = "Bit_12 On";
-            this.btnBit12On.UseVisualStyleBackColor = true;
-            this.btnBit12On.Click += new System.EventHandler(this.btnBit0On_Click);
-            // 
-            // btnBit11Off
-            // 
-            this.btnBit11Off.Location = new System.Drawing.Point(182, 120);
-            this.btnBit11Off.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit11Off.Name = "btnBit11Off";
-            this.btnBit11Off.Size = new System.Drawing.Size(120, 37);
-            this.btnBit11Off.TabIndex = 15;
-            this.btnBit11Off.Tag = "11";
-            this.btnBit11Off.Text = "Bit_11 Off";
-            this.btnBit11Off.UseVisualStyleBackColor = true;
-            this.btnBit11Off.Click += new System.EventHandler(this.btnBit0Off_Click);
-            // 
-            // btnBit11On
-            // 
-            this.btnBit11On.Location = new System.Drawing.Point(43, 120);
-            this.btnBit11On.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit11On.Name = "btnBit11On";
-            this.btnBit11On.Size = new System.Drawing.Size(120, 37);
-            this.btnBit11On.TabIndex = 14;
-            this.btnBit11On.Tag = "11";
-            this.btnBit11On.Text = "Bit_11 On";
-            this.btnBit11On.UseVisualStyleBackColor = true;
-            this.btnBit11On.Click += new System.EventHandler(this.btnBit0On_Click);
-            // 
-            // btnBit1Off
-            // 
-            this.btnBit1Off.Location = new System.Drawing.Point(182, 73);
-            this.btnBit1Off.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit1Off.Name = "btnBit1Off";
-            this.btnBit1Off.Size = new System.Drawing.Size(120, 37);
-            this.btnBit1Off.TabIndex = 13;
-            this.btnBit1Off.Tag = "1";
-            this.btnBit1Off.Text = "Bit_1 Off";
-            this.btnBit1Off.UseVisualStyleBackColor = true;
-            this.btnBit1Off.Click += new System.EventHandler(this.btnBit0Off_Click);
-            // 
-            // btnBit1On
-            // 
-            this.btnBit1On.Location = new System.Drawing.Point(43, 73);
-            this.btnBit1On.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit1On.Name = "btnBit1On";
-            this.btnBit1On.Size = new System.Drawing.Size(120, 37);
-            this.btnBit1On.TabIndex = 12;
-            this.btnBit1On.Tag = "1";
-            this.btnBit1On.Text = "Bit_1 On";
-            this.btnBit1On.UseVisualStyleBackColor = true;
-            this.btnBit1On.Click += new System.EventHandler(this.btnBit0On_Click);
-            // 
-            // btnBit0Off
-            // 
-            this.btnBit0Off.Location = new System.Drawing.Point(182, 26);
-            this.btnBit0Off.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit0Off.Name = "btnBit0Off";
-            this.btnBit0Off.Size = new System.Drawing.Size(120, 37);
-            this.btnBit0Off.TabIndex = 11;
-            this.btnBit0Off.Tag = "0";
-            this.btnBit0Off.Text = "Bit_0 Off";
-            this.btnBit0Off.UseVisualStyleBackColor = true;
-            this.btnBit0Off.Click += new System.EventHandler(this.btnBit0Off_Click);
-            // 
-            // btnBit0On
-            // 
-            this.btnBit0On.Location = new System.Drawing.Point(43, 26);
-            this.btnBit0On.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBit0On.Name = "btnBit0On";
-            this.btnBit0On.Size = new System.Drawing.Size(120, 37);
-            this.btnBit0On.TabIndex = 10;
-            this.btnBit0On.Tag = "0";
-            this.btnBit0On.Text = "Bit_0 On";
-            this.btnBit0On.UseVisualStyleBackColor = true;
-            this.btnBit0On.Click += new System.EventHandler(this.btnBit0On_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.button7);
-            this.groupBox3.Controls.Add(this.btnFunctionRun);
-            this.groupBox3.Location = new System.Drawing.Point(696, 449);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(203, 157);
-            this.groupBox3.TabIndex = 20;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Function Run";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(43, 86);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(143, 53);
-            this.button7.TabIndex = 1;
-            this.button7.Text = "Run Main1";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.btnFunctionRun_Click);
-            // 
-            // btnFunctionRun
-            // 
-            this.btnFunctionRun.Location = new System.Drawing.Point(43, 27);
-            this.btnFunctionRun.Name = "btnFunctionRun";
-            this.btnFunctionRun.Size = new System.Drawing.Size(143, 53);
-            this.btnFunctionRun.TabIndex = 0;
-            this.btnFunctionRun.Text = "Run Main";
-            this.btnFunctionRun.UseVisualStyleBackColor = true;
-            this.btnFunctionRun.Click += new System.EventHandler(this.btnFunctionRun_Click);
-            // 
             // btnMovetoLaserMeasurement
             // 
-            this.btnMovetoLaserMeasurement.Location = new System.Drawing.Point(1123, 91);
+            this.btnMovetoLaserMeasurement.Location = new System.Drawing.Point(678, 20);
             this.btnMovetoLaserMeasurement.Name = "btnMovetoLaserMeasurement";
             this.btnMovetoLaserMeasurement.Size = new System.Drawing.Size(242, 53);
             this.btnMovetoLaserMeasurement.TabIndex = 2;
@@ -741,7 +355,7 @@ namespace Demo1
             // 
             // btnCcdMoveDetectionElements
             // 
-            this.btnCcdMoveDetectionElements.Location = new System.Drawing.Point(1123, 168);
+            this.btnCcdMoveDetectionElements.Location = new System.Drawing.Point(678, 97);
             this.btnCcdMoveDetectionElements.Name = "btnCcdMoveDetectionElements";
             this.btnCcdMoveDetectionElements.Size = new System.Drawing.Size(201, 53);
             this.btnCcdMoveDetectionElements.TabIndex = 21;
@@ -751,7 +365,7 @@ namespace Demo1
             // 
             // btnMovetoElementPickAndBlowWaitArea
             // 
-            this.btnMovetoElementPickAndBlowWaitArea.Location = new System.Drawing.Point(1123, 249);
+            this.btnMovetoElementPickAndBlowWaitArea.Location = new System.Drawing.Point(678, 178);
             this.btnMovetoElementPickAndBlowWaitArea.Name = "btnMovetoElementPickAndBlowWaitArea";
             this.btnMovetoElementPickAndBlowWaitArea.Size = new System.Drawing.Size(217, 53);
             this.btnMovetoElementPickAndBlowWaitArea.TabIndex = 22;
@@ -761,7 +375,7 @@ namespace Demo1
             // 
             // btnPickBlowElements
             // 
-            this.btnPickBlowElements.Location = new System.Drawing.Point(1123, 461);
+            this.btnPickBlowElements.Location = new System.Drawing.Point(678, 390);
             this.btnPickBlowElements.Name = "btnPickBlowElements";
             this.btnPickBlowElements.Size = new System.Drawing.Size(217, 53);
             this.btnPickBlowElements.TabIndex = 23;
@@ -771,7 +385,7 @@ namespace Demo1
             // 
             // btnMovetoBlowAirPlace
             // 
-            this.btnMovetoBlowAirPlace.Location = new System.Drawing.Point(1123, 402);
+            this.btnMovetoBlowAirPlace.Location = new System.Drawing.Point(678, 331);
             this.btnMovetoBlowAirPlace.Name = "btnMovetoBlowAirPlace";
             this.btnMovetoBlowAirPlace.Size = new System.Drawing.Size(217, 53);
             this.btnMovetoBlowAirPlace.TabIndex = 24;
@@ -781,7 +395,7 @@ namespace Demo1
             // 
             // BtnMvoeNgPosition
             // 
-            this.BtnMvoeNgPosition.Location = new System.Drawing.Point(1123, 322);
+            this.BtnMvoeNgPosition.Location = new System.Drawing.Point(678, 251);
             this.BtnMvoeNgPosition.Name = "BtnMvoeNgPosition";
             this.BtnMvoeNgPosition.Size = new System.Drawing.Size(169, 53);
             this.BtnMvoeNgPosition.TabIndex = 25;
@@ -791,17 +405,18 @@ namespace Demo1
             // 
             // btnMovePutElementsPosition
             // 
-            this.btnMovePutElementsPosition.Location = new System.Drawing.Point(1123, 544);
+            this.btnMovePutElementsPosition.Location = new System.Drawing.Point(678, 473);
             this.btnMovePutElementsPosition.Name = "btnMovePutElementsPosition";
             this.btnMovePutElementsPosition.Size = new System.Drawing.Size(217, 53);
             this.btnMovePutElementsPosition.TabIndex = 27;
             this.btnMovePutElementsPosition.Text = "5.MovePutElementsPosition";
             this.btnMovePutElementsPosition.UseVisualStyleBackColor = true;
+            this.btnMovePutElementsPosition.Click += new System.EventHandler(this.btnMovePutElementsPosition_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1372, 104);
+            this.label4.Location = new System.Drawing.Point(927, 33);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 20);
@@ -811,7 +426,7 @@ namespace Demo1
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1518, 103);
+            this.label6.Location = new System.Drawing.Point(1073, 32);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(65, 20);
@@ -820,44 +435,44 @@ namespace Demo1
             // 
             // txtStep1_g_CcdX
             // 
-            this.txtStep1_g_CcdX.Location = new System.Drawing.Point(1437, 100);
+            this.txtStep1_g_CcdX.Location = new System.Drawing.Point(992, 29);
             this.txtStep1_g_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep1_g_CcdX.Name = "txtStep1_g_CcdX";
             this.txtStep1_g_CcdX.Size = new System.Drawing.Size(73, 26);
             this.txtStep1_g_CcdX.TabIndex = 15;
-            this.txtStep1_g_CcdX.Text = "10";
+            this.txtStep1_g_CcdX.Text = "285.808";
             // 
             // txtStep1_g_CcdY
             // 
-            this.txtStep1_g_CcdY.Location = new System.Drawing.Point(1591, 100);
+            this.txtStep1_g_CcdY.Location = new System.Drawing.Point(1146, 29);
             this.txtStep1_g_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep1_g_CcdY.Name = "txtStep1_g_CcdY";
             this.txtStep1_g_CcdY.Size = new System.Drawing.Size(73, 26);
             this.txtStep1_g_CcdY.TabIndex = 31;
-            this.txtStep1_g_CcdY.Text = "10";
+            this.txtStep1_g_CcdY.Text = "-14.416";
             // 
             // txtStep2_g_CcdY
             // 
-            this.txtStep2_g_CcdY.Location = new System.Drawing.Point(1550, 181);
+            this.txtStep2_g_CcdY.Location = new System.Drawing.Point(1105, 110);
             this.txtStep2_g_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep2_g_CcdY.Name = "txtStep2_g_CcdY";
             this.txtStep2_g_CcdY.Size = new System.Drawing.Size(73, 26);
             this.txtStep2_g_CcdY.TabIndex = 35;
-            this.txtStep2_g_CcdY.Text = "11.2";
+            this.txtStep2_g_CcdY.Text = "-14.416";
             // 
             // txtStep2_g_CcdX
             // 
-            this.txtStep2_g_CcdX.Location = new System.Drawing.Point(1395, 181);
+            this.txtStep2_g_CcdX.Location = new System.Drawing.Point(950, 110);
             this.txtStep2_g_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep2_g_CcdX.Name = "txtStep2_g_CcdX";
             this.txtStep2_g_CcdX.Size = new System.Drawing.Size(73, 26);
             this.txtStep2_g_CcdX.TabIndex = 32;
-            this.txtStep2_g_CcdX.Text = "11.2";
+            this.txtStep2_g_CcdX.Text = "285.808";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1477, 184);
+            this.label5.Location = new System.Drawing.Point(1032, 113);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 20);
@@ -867,7 +482,7 @@ namespace Demo1
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1331, 184);
+            this.label7.Location = new System.Drawing.Point(886, 113);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 20);
@@ -877,7 +492,7 @@ namespace Demo1
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(1631, 184);
+            this.label8.Location = new System.Drawing.Point(1186, 113);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(64, 20);
@@ -886,26 +501,26 @@ namespace Demo1
             // 
             // txtStep2_g_CcdZ
             // 
-            this.txtStep2_g_CcdZ.Location = new System.Drawing.Point(1693, 181);
+            this.txtStep2_g_CcdZ.Location = new System.Drawing.Point(1248, 110);
             this.txtStep2_g_CcdZ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep2_g_CcdZ.Name = "txtStep2_g_CcdZ";
             this.txtStep2_g_CcdZ.Size = new System.Drawing.Size(73, 26);
             this.txtStep2_g_CcdZ.TabIndex = 37;
-            this.txtStep2_g_CcdZ.Text = "10.3";
+            this.txtStep2_g_CcdZ.Text = "-30.000";
             // 
             // txtStep3_g_CcdZ
             // 
-            this.txtStep3_g_CcdZ.Location = new System.Drawing.Point(1709, 262);
+            this.txtStep3_g_CcdZ.Location = new System.Drawing.Point(1264, 191);
             this.txtStep3_g_CcdZ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep3_g_CcdZ.Name = "txtStep3_g_CcdZ";
             this.txtStep3_g_CcdZ.Size = new System.Drawing.Size(73, 26);
             this.txtStep3_g_CcdZ.TabIndex = 43;
-            this.txtStep3_g_CcdZ.Text = "11.2";
+            this.txtStep3_g_CcdZ.Text = "-104.416";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(1647, 265);
+            this.label9.Location = new System.Drawing.Point(1202, 194);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(64, 20);
@@ -914,26 +529,26 @@ namespace Demo1
             // 
             // txtStep3_g_CcdY
             // 
-            this.txtStep3_g_CcdY.Location = new System.Drawing.Point(1566, 262);
+            this.txtStep3_g_CcdY.Location = new System.Drawing.Point(1121, 191);
             this.txtStep3_g_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep3_g_CcdY.Name = "txtStep3_g_CcdY";
             this.txtStep3_g_CcdY.Size = new System.Drawing.Size(73, 26);
             this.txtStep3_g_CcdY.TabIndex = 41;
-            this.txtStep3_g_CcdY.Text = "12.344";
+            this.txtStep3_g_CcdY.Text = "35.384";
             // 
             // txtStep3_g_CcdX
             // 
-            this.txtStep3_g_CcdX.Location = new System.Drawing.Point(1411, 262);
+            this.txtStep3_g_CcdX.Location = new System.Drawing.Point(966, 191);
             this.txtStep3_g_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStep3_g_CcdX.Name = "txtStep3_g_CcdX";
             this.txtStep3_g_CcdX.Size = new System.Drawing.Size(73, 26);
             this.txtStep3_g_CcdX.TabIndex = 38;
-            this.txtStep3_g_CcdX.Text = "11.33";
+            this.txtStep3_g_CcdX.Text = "285.808";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(1493, 265);
+            this.label10.Location = new System.Drawing.Point(1048, 194);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(65, 20);
@@ -943,73 +558,73 @@ namespace Demo1
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(1347, 265);
+            this.label11.Location = new System.Drawing.Point(902, 194);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 20);
             this.label11.TabIndex = 39;
             this.label11.Text = "offset X";
             // 
-            // txtStep4_id
+            // txtStep6_id
             // 
-            this.txtStep4_id.Location = new System.Drawing.Point(1392, 473);
-            this.txtStep4_id.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtStep4_id.Name = "txtStep4_id";
-            this.txtStep4_id.Size = new System.Drawing.Size(73, 26);
-            this.txtStep4_id.TabIndex = 44;
-            this.txtStep4_id.Text = "1";
+            this.txtStep6_id.Location = new System.Drawing.Point(947, 402);
+            this.txtStep6_id.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtStep6_id.Name = "txtStep6_id";
+            this.txtStep6_id.Size = new System.Drawing.Size(73, 26);
+            this.txtStep6_id.TabIndex = 44;
+            this.txtStep6_id.Text = "1";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(1356, 476);
+            this.label12.Location = new System.Drawing.Point(911, 405);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(23, 20);
             this.label12.TabIndex = 45;
             this.label12.Text = "Id";
             // 
-            // txtStep5_id
+            // txtStep7_id
             // 
-            this.txtStep5_id.Location = new System.Drawing.Point(1392, 414);
-            this.txtStep5_id.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtStep5_id.Name = "txtStep5_id";
-            this.txtStep5_id.Size = new System.Drawing.Size(73, 26);
-            this.txtStep5_id.TabIndex = 46;
-            this.txtStep5_id.Text = "1";
+            this.txtStep7_id.Location = new System.Drawing.Point(947, 343);
+            this.txtStep7_id.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtStep7_id.Name = "txtStep7_id";
+            this.txtStep7_id.Size = new System.Drawing.Size(73, 26);
+            this.txtStep7_id.TabIndex = 46;
+            this.txtStep7_id.Text = "1";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(1356, 417);
+            this.label13.Location = new System.Drawing.Point(911, 346);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(23, 20);
             this.label13.TabIndex = 47;
             this.label13.Text = "Id";
             // 
-            // txtStep7_g_CcdY
+            // txtStep5_g_CcdY
             // 
-            this.txtStep7_g_CcdY.Location = new System.Drawing.Point(1575, 556);
-            this.txtStep7_g_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtStep7_g_CcdY.Name = "txtStep7_g_CcdY";
-            this.txtStep7_g_CcdY.Size = new System.Drawing.Size(73, 26);
-            this.txtStep7_g_CcdY.TabIndex = 51;
-            this.txtStep7_g_CcdY.Text = "13.44";
+            this.txtStep5_g_CcdY.Location = new System.Drawing.Point(1130, 485);
+            this.txtStep5_g_CcdY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtStep5_g_CcdY.Name = "txtStep5_g_CcdY";
+            this.txtStep5_g_CcdY.Size = new System.Drawing.Size(73, 26);
+            this.txtStep5_g_CcdY.TabIndex = 51;
+            this.txtStep5_g_CcdY.Text = "196.114";
             // 
-            // txtStep7_g_CcdX
+            // txtStep5_g_CcdX
             // 
-            this.txtStep7_g_CcdX.Location = new System.Drawing.Point(1424, 556);
-            this.txtStep7_g_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtStep7_g_CcdX.Name = "txtStep7_g_CcdX";
-            this.txtStep7_g_CcdX.Size = new System.Drawing.Size(73, 26);
-            this.txtStep7_g_CcdX.TabIndex = 48;
-            this.txtStep7_g_CcdX.Text = "13.3";
+            this.txtStep5_g_CcdX.Location = new System.Drawing.Point(979, 485);
+            this.txtStep5_g_CcdX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtStep5_g_CcdX.Name = "txtStep5_g_CcdX";
+            this.txtStep5_g_CcdX.Size = new System.Drawing.Size(73, 26);
+            this.txtStep5_g_CcdX.TabIndex = 48;
+            this.txtStep5_g_CcdX.Text = "-252.433";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(1502, 559);
+            this.label14.Location = new System.Drawing.Point(1057, 488);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(65, 20);
@@ -1019,7 +634,7 @@ namespace Demo1
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(1356, 560);
+            this.label15.Location = new System.Drawing.Point(911, 489);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 20);
@@ -1028,7 +643,7 @@ namespace Demo1
             // 
             // btnAutoRun
             // 
-            this.btnAutoRun.Location = new System.Drawing.Point(1133, 607);
+            this.btnAutoRun.Location = new System.Drawing.Point(688, 536);
             this.btnAutoRun.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAutoRun.Name = "btnAutoRun";
             this.btnAutoRun.Size = new System.Drawing.Size(154, 42);
@@ -1039,33 +654,23 @@ namespace Demo1
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(703, 742);
+            this.txtLog.Location = new System.Drawing.Point(476, 696);
             this.txtLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(794, 214);
+            this.txtLog.Size = new System.Drawing.Size(794, 157);
             this.txtLog.TabIndex = 8;
             // 
             // btnContinue
             // 
-            this.btnContinue.Location = new System.Drawing.Point(1491, 605);
+            this.btnContinue.Location = new System.Drawing.Point(1046, 534);
             this.btnContinue.Name = "btnContinue";
             this.btnContinue.Size = new System.Drawing.Size(92, 65);
             this.btnContinue.TabIndex = 52;
             this.btnContinue.Text = "Single \r\nContinue";
             this.btnContinue.UseVisualStyleBackColor = true;
             this.btnContinue.Click += new System.EventHandler(this.button2_Click_1);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(497, 690);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(136, 42);
-            this.button6.TabIndex = 53;
-            this.button6.Text = "AutoRun2";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // timer1
             // 
@@ -1074,7 +679,7 @@ namespace Demo1
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(1148, 34);
+            this.button8.Location = new System.Drawing.Point(1248, 16);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(116, 36);
             this.button8.TabIndex = 54;
@@ -1084,7 +689,7 @@ namespace Demo1
             // 
             // btnResetData
             // 
-            this.btnResetData.Location = new System.Drawing.Point(1294, 605);
+            this.btnResetData.Location = new System.Drawing.Point(849, 534);
             this.btnResetData.Name = "btnResetData";
             this.btnResetData.Size = new System.Drawing.Size(145, 44);
             this.btnResetData.TabIndex = 55;
@@ -1094,7 +699,7 @@ namespace Demo1
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1588, 605);
+            this.button2.Location = new System.Drawing.Point(1143, 534);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(92, 65);
             this.button2.TabIndex = 56;
@@ -1104,7 +709,7 @@ namespace Demo1
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(1683, 605);
+            this.button9.Location = new System.Drawing.Point(1238, 534);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(92, 65);
             this.button9.TabIndex = 57;
@@ -1114,7 +719,7 @@ namespace Demo1
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(1081, 690);
+            this.button10.Location = new System.Drawing.Point(1096, 644);
             this.button10.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(154, 42);
@@ -1126,7 +731,7 @@ namespace Demo1
             // button11
             // 
             this.button11.Enabled = false;
-            this.button11.Location = new System.Drawing.Point(919, 690);
+            this.button11.Location = new System.Drawing.Point(934, 644);
             this.button11.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(154, 42);
@@ -1137,7 +742,7 @@ namespace Demo1
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(757, 690);
+            this.button12.Location = new System.Drawing.Point(772, 644);
             this.button12.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(154, 42);
@@ -1148,7 +753,7 @@ namespace Demo1
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(1294, 655);
+            this.button13.Location = new System.Drawing.Point(849, 584);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(145, 45);
             this.button13.TabIndex = 61;
@@ -1158,7 +763,7 @@ namespace Demo1
             // 
             // btnAddRow
             // 
-            this.btnAddRow.Location = new System.Drawing.Point(1539, 676);
+            this.btnAddRow.Location = new System.Drawing.Point(1094, 605);
             this.btnAddRow.Name = "btnAddRow";
             this.btnAddRow.Size = new System.Drawing.Size(157, 31);
             this.btnAddRow.TabIndex = 62;
@@ -1168,7 +773,7 @@ namespace Demo1
             // 
             // btnCylceRunAssign
             // 
-            this.btnCylceRunAssign.Location = new System.Drawing.Point(1609, 753);
+            this.btnCylceRunAssign.Location = new System.Drawing.Point(1164, 394);
             this.btnCylceRunAssign.Name = "btnCylceRunAssign";
             this.btnCylceRunAssign.Size = new System.Drawing.Size(157, 31);
             this.btnCylceRunAssign.TabIndex = 63;
@@ -1179,17 +784,135 @@ namespace Demo1
             // lbleCycleRun
             // 
             this.lbleCycleRun.AutoSize = true;
-            this.lbleCycleRun.Location = new System.Drawing.Point(1620, 787);
+            this.lbleCycleRun.Location = new System.Drawing.Point(1175, 428);
             this.lbleCycleRun.Name = "lbleCycleRun";
             this.lbleCycleRun.Size = new System.Drawing.Size(129, 20);
             this.lbleCycleRun.TabIndex = 64;
             this.lbleCycleRun.Text = "Cycle Run=False";
             // 
+            // btnIsVirtualModel
+            // 
+            this.btnIsVirtualModel.Location = new System.Drawing.Point(1114, 283);
+            this.btnIsVirtualModel.Name = "btnIsVirtualModel";
+            this.btnIsVirtualModel.Size = new System.Drawing.Size(152, 29);
+            this.btnIsVirtualModel.TabIndex = 65;
+            this.btnIsVirtualModel.Text = "IsVirtualModel";
+            this.btnIsVirtualModel.UseVisualStyleBackColor = true;
+            this.btnIsVirtualModel.Click += new System.EventHandler(this.btnIsVirtualModel_Click);
+            // 
+            // lblIsVirtualModel
+            // 
+            this.lblIsVirtualModel.AutoSize = true;
+            this.lblIsVirtualModel.Location = new System.Drawing.Point(1126, 315);
+            this.lblIsVirtualModel.Name = "lblIsVirtualModel";
+            this.lblIsVirtualModel.Size = new System.Drawing.Size(158, 20);
+            this.lblIsVirtualModel.TabIndex = 66;
+            this.lblIsVirtualModel.Text = "IsVirtualModel=False";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 20);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "StageStatus";
+            // 
+            // lblStageStatus
+            // 
+            this.lblStageStatus.AutoSize = true;
+            this.lblStageStatus.Location = new System.Drawing.Point(180, 0);
+            this.lblStageStatus.Name = "lblStageStatus";
+            this.lblStageStatus.Size = new System.Drawing.Size(60, 20);
+            this.lblStageStatus.TabIndex = 2;
+            this.lblStageStatus.Text = "label16";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.RobotElementId, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label16, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.StageElementId2, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.StageElementId1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lblStageStatus, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(46, 12);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(354, 124);
+            this.tableLayoutPanel1.TabIndex = 67;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 24);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(115, 20);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "#1 Element ID ";
+            // 
+            // StageElementId1
+            // 
+            this.StageElementId1.AutoSize = true;
+            this.StageElementId1.Location = new System.Drawing.Point(180, 24);
+            this.StageElementId1.Name = "StageElementId1";
+            this.StageElementId1.Size = new System.Drawing.Size(22, 20);
+            this.StageElementId1.TabIndex = 4;
+            this.StageElementId1.Text = "0 ";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 48);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(115, 20);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "#2 Element ID ";
+            // 
+            // StageElementId2
+            // 
+            this.StageElementId2.AutoSize = true;
+            this.StageElementId2.Location = new System.Drawing.Point(180, 48);
+            this.StageElementId2.Name = "StageElementId2";
+            this.StageElementId2.Size = new System.Drawing.Size(22, 20);
+            this.StageElementId2.TabIndex = 6;
+            this.StageElementId2.Text = "0 ";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 72);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(141, 20);
+            this.label16.TabIndex = 7;
+            this.label16.Text = "Robot Element ID ";
+            // 
+            // RobotElementId
+            // 
+            this.RobotElementId.AutoSize = true;
+            this.RobotElementId.Location = new System.Drawing.Point(180, 72);
+            this.RobotElementId.Name = "RobotElementId";
+            this.RobotElementId.Size = new System.Drawing.Size(22, 20);
+            this.RobotElementId.TabIndex = 8;
+            this.RobotElementId.Text = "0 ";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1809, 970);
+            this.ClientSize = new System.Drawing.Size(1403, 840);
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.lblIsVirtualModel);
+            this.Controls.Add(this.btnIsVirtualModel);
             this.Controls.Add(this.lbleCycleRun);
             this.Controls.Add(this.btnCylceRunAssign);
             this.Controls.Add(this.btnAddRow);
@@ -1201,17 +924,16 @@ namespace Demo1
             this.Controls.Add(this.button2);
             this.Controls.Add(this.btnResetData);
             this.Controls.Add(this.button8);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.btnContinue);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.btnAutoRun);
-            this.Controls.Add(this.txtStep7_g_CcdY);
-            this.Controls.Add(this.txtStep7_g_CcdX);
+            this.Controls.Add(this.txtStep5_g_CcdY);
+            this.Controls.Add(this.txtStep5_g_CcdX);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.txtStep5_id);
+            this.Controls.Add(this.txtStep7_id);
             this.Controls.Add(this.label13);
-            this.Controls.Add(this.txtStep4_id);
+            this.Controls.Add(this.txtStep6_id);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.txtStep3_g_CcdZ);
             this.Controls.Add(this.label9);
@@ -1236,15 +958,11 @@ namespace Demo1
             this.Controls.Add(this.btnMovetoElementPickAndBlowWaitArea);
             this.Controls.Add(this.btnCcdMoveDetectionElements);
             this.Controls.Add(this.btnMovetoLaserMeasurement);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnServoOff);
             this.Controls.Add(this.btnServoOn);
             this.Controls.Add(this.btnSimulator);
             this.Controls.Add(this.gBoxRunTasks);
-            this.Controls.Add(this.gBoxGlobals);
             this.Controls.Add(this.btnTeachPoint);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnProgramMode);
@@ -1259,14 +977,10 @@ namespace Demo1
             this.Text = "EPSON RC+ 7.0 C# API Demo";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.gBoxGlobals.ResumeLayout(false);
-            this.gBoxGlobals.PerformLayout();
             this.gBoxRunTasks.ResumeLayout(false);
             this.gBoxRunTasks.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1282,13 +996,6 @@ namespace Demo1
         private System.Windows.Forms.Button btnProgramMode;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnTeachPoint;
-        private System.Windows.Forms.GroupBox gBoxGlobals;
-        private System.Windows.Forms.Label lblVariableName;
-        private System.Windows.Forms.ComboBox cmbVars;
-        private System.Windows.Forms.Label lblValue;
-        private System.Windows.Forms.TextBox txtVarValue;
-        private System.Windows.Forms.Button btnWrite;
-        private System.Windows.Forms.Button btnRead;
         private System.Windows.Forms.GroupBox gBoxRunTasks;
         private System.Windows.Forms.Label lblEvents;
         private System.Windows.Forms.ComboBox cmbFunc;
@@ -1302,31 +1009,6 @@ namespace Demo1
         private System.Windows.Forms.Button btnServoOn;
         private System.Windows.Forms.Button btnServoOff;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox txtg_CcdZ;
-        private System.Windows.Forms.TextBox txtg_CcdY;
-        private System.Windows.Forms.TextBox txtg_CcdX;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnReadg_CcdZ;
-        private System.Windows.Forms.Button btnReadg_CcdY;
-        private System.Windows.Forms.Button btnReadg_CcdX;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnBit1Off;
-        private System.Windows.Forms.Button btnBit1On;
-        private System.Windows.Forms.Button btnBit0Off;
-        private System.Windows.Forms.Button btnBit0On;
-        private System.Windows.Forms.Button btnBit12Off;
-        private System.Windows.Forms.Button btnBit12On;
-        private System.Windows.Forms.Button btnBit11Off;
-        private System.Windows.Forms.Button btnBit11On;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button btnFunctionRun;
         private System.Windows.Forms.Button btnMovetoLaserMeasurement;
         private System.Windows.Forms.Button btnCcdMoveDetectionElements;
         private System.Windows.Forms.Button btnMovetoElementPickAndBlowWaitArea;
@@ -1350,18 +1032,17 @@ namespace Demo1
         private System.Windows.Forms.TextBox txtStep3_g_CcdX;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox txtStep4_id;
+        private System.Windows.Forms.TextBox txtStep6_id;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox txtStep5_id;
+        private System.Windows.Forms.TextBox txtStep7_id;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox txtStep7_g_CcdY;
-        private System.Windows.Forms.TextBox txtStep7_g_CcdX;
+        private System.Windows.Forms.TextBox txtStep5_g_CcdY;
+        private System.Windows.Forms.TextBox txtStep5_g_CcdX;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnAutoRun;
         public System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.Button btnContinue;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button btnResetData;
@@ -1374,6 +1055,17 @@ namespace Demo1
         private System.Windows.Forms.Button btnAddRow;
         private System.Windows.Forms.Button btnCylceRunAssign;
         private System.Windows.Forms.Label lbleCycleRun;
+        private System.Windows.Forms.Button btnIsVirtualModel;
+        private System.Windows.Forms.Label lblIsVirtualModel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblStageStatus;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label RobotElementId;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label StageElementId2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label StageElementId1;
+        private System.Windows.Forms.Label label1;
     }
 }
 

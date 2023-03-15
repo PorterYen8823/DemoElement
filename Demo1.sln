@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "Demo1.csproj", "{89E791F8-483A-4A80-987C-A2ECA3FA903B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA} = {D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlueNet.MMM.AutoTransferring.EpsonRobot", "..\GlueNet.MMM.AutoTransferring.EpsonRobot\GlueNet.MMM.AutoTransferring.EpsonRobot.csproj", "{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +20,15 @@ Global
 		{89E791F8-483A-4A80-987C-A2ECA3FA903B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89E791F8-483A-4A80-987C-A2ECA3FA903B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89E791F8-483A-4A80-987C-A2ECA3FA903B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720DAC0-9016-444C-AC16-06E649B4B2CC}
 	EndGlobalSection
 EndGlobal

@@ -11,9 +11,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GlueNet.MMM.AutoTransferring.EpsonRobot;
 using Newtonsoft.Json;
 using RCAPINet;
 using static System.Collections.Specialized.BitVector32;
+
+ 
 
 namespace Demo1
 {
@@ -26,13 +29,15 @@ namespace Demo1
 
         static UdpClient uc = new UdpClient();
 
+       
 
         // 系統設定參數
         static bool ContinueAction = false;
         static bool ContinueActionMode = false;
         static bool CycleAutoRun = false;
-        static int PickProcessMode = 1;   //  0.移載到吹氣區優先 1.吹氣完成pick優先 
+        static ProcessMode PickProcessMode = ProcessMode.PlaceElementFirst;   //  0.移載到吹氣區pick優先 1.工作區 pick優先 
         static int RobotTimeOutInterval = 15000;
+        static bool IsVirtualModel = true;
 
 
         // 處理執行續, 已經改用 Task 方式處理
@@ -40,27 +45,27 @@ namespace Demo1
         Thread trdAutoRun = null;
 
 
-        //  交握點位定義 ()
+        //  交握點位定義 
         List<EpsonMemoryTbl> epsonMemoryTbls = new List<EpsonMemoryTbl>
        {
-            new EpsonMemoryTbl {id=31, Label= "SensoMoverGetElement_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=32, Label= "SensorMoveGetElement_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=33, Label= "CcdGetMoveElement_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=34, Label= "CcdGetMoveElement_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=35, Label= "NozzleMoveGetElement_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=36, Label= "NozzleMoveGetElement_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=37, Label= "MoveNgPosition_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=38, Label= "MoveNgPosition_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=39, Label= "MovePutElementsPosition_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=40, Label= "MovePutElementsPosition_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=41, Label= "MoveBlowElementsPosition1_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=42, Label= "MoveBlowElementsPosition1_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=43, Label= "MoveBlowElementsPosition2_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=44, Label= "MoveBlowElementsPosition2_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=45, Label= "PickBlowElement_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=46, Label= "PickBlowElement_Idle", Vlaue=false},
-         new EpsonMemoryTbl {id=47, Label= "PlaceBlowElement_OK", Vlaue=false},
-         new EpsonMemoryTbl {id=48, Label= "PlaceBlowElement_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=31, Label= "SensoMoverGetElement_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=32, Label= "SensorMoveGetElement_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=33, Label= "CcdGetMoveElement_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=34, Label= "CcdGetMoveElement_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=35, Label= "NozzleMoveGetElement_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=36, Label= "NozzleMoveGetElement_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=37, Label= "MoveNgPosition_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=38, Label= "MoveNgPosition_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=39, Label= "MovePutElementsPosition_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=40, Label= "MovePutElementsPosition_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=41, Label= "MoveBlowElementsPosition1_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=42, Label= "MoveBlowElementsPosition1_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=43, Label= "MoveBlowElementsPosition2_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=44, Label= "MoveBlowElementsPosition2_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=45, Label= "PickBlowElement_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=46, Label= "PickBlowElement_Idle", Vlaue=false},
+             new EpsonMemoryTbl {id=47, Label= "PlaceBlowElement_OK", Vlaue=false},
+             new EpsonMemoryTbl {id=48, Label= "PlaceBlowElement_Idle", Vlaue=false},
            };
 
 
@@ -113,10 +118,16 @@ namespace Demo1
         //
         int NextStep = 0;
 
+
+        // Epson
+        private static GlueNet.MMM.AutoTransferring.EpsonRobot.EpsonRobot epsonRobot;
+
         public frmMain()
         {
             InitializeComponent();
         }
+      
+        
         static Spel m_spel;
 
 
@@ -191,14 +202,17 @@ namespace Demo1
             if (run_Robot == true)
             {
                 m_spel = new Spel();
+                m_spel.ServerInstance = 1;
                 m_spel.Initialize();
 
-                m_spel.Project = @"C:\EpsonRC70\projects\API_DEMO2\Glue_20230307\Glue_20230307.sprj";
+                 m_spel.Project = @"C:\EpsonRC70\projects\API_Demos\Glue_20230315_OK\Glue_20230315_OK.sprj";
+              // m_spel.Project = @"C:\EpsonRC70\projects\API_DEMO2\Glue_20230307\Glue_20230307.sprj";
                 m_spel.EventReceived += new Spel.EventReceivedEventHandler(m_spel_EventReceived);
 
                 m_spel.EnableEvent(SpelEvents.AllTasksStopped, true);
                 
                 timer1.Start();
+                epsonRobot = new GlueNet.MMM.AutoTransferring.EpsonRobot.EpsonRobot();
             }
 
 
@@ -210,15 +224,7 @@ namespace Demo1
             cmbFunc.Items.Add("main5");
             cmbFunc.Items.Add("main6");
 
-            cmbFunc.SelectedIndex = 0;
-
-            cmbVars.Items.Add("g_CcdX");
-            cmbVars.Items.Add("g_CcdY");
-            cmbVars.Items.Add("g_CcdZ");
-
-
-            cmbVars.SelectedIndex = 0;
-
+            cmbFunc.SelectedIndex = 0;  
             btnPause.Enabled = false;
             btnCont.Enabled = false;
             btnStop.Enabled = false;
@@ -229,20 +235,12 @@ namespace Demo1
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             cancelTokenSourceBlowAir.Cancel();
-            cancelTokenSourceAutoRun.Cancel();
-
+            cancelTokenSourceAutoRun.Cancel();          
            
-            if (trdAutoRun != null)
-            {
-                trdAutoRun.Abort();
-            }
-            if (trdBlowAir != null)
-            {
-                trdBlowAir.Abort();
-            }
 
             if (run_Robot == true)
             {
+                epsonRobot.Dispose();
                 m_spel.Dispose();
             }
 
@@ -251,29 +249,31 @@ namespace Demo1
 
         private void btnCont_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.Continue();
-                btnPause.Enabled = true;
-                btnCont.Enabled = false;
+            //try
+            //{
+            //    m_spel.Continue();
+            //    btnPause.Enabled = true;
+            //    btnCont.Enabled = false;
 
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //}
+            //catch (SpelException ex)
+            //{
+            //    throw ex;
+            //   // MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnControllerTools_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.RunDialog(SpelDialogs.ControllerTools, this);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    m_spel.RunDialog(SpelDialogs.ControllerTools, this);
+            //}
+            //catch (SpelException ex)
+            //{
+            //    throw ex;
+            //   // MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -284,29 +284,31 @@ namespace Demo1
 
         private void btnIOMonitor_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.ShowWindow(SpelWindows.IOMonitor, this);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    m_spel.ShowWindow(SpelWindows.IOMonitor, this);
+            //}
+            //catch (SpelException ex)
+            //{
+            //    throw ex;
+            //    // MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnPause_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.Pause();
-                btnPause.Enabled = false;
-                btnCont.Enabled = true;
+            //try
+            //{
+            //    m_spel.Pause();
+            //    btnPause.Enabled = false;
+            //    btnCont.Enabled = true;
 
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //}
+            //catch (SpelException ex)
+            //{
+            //    throw ex;
+            //    //MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnProgramMode_Click(object sender, EventArgs e)
@@ -317,22 +319,24 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                //throw ex;
+                 MessageBox.Show(ex.Message);
             }
         }
 
         private void btnRead_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Object v;
-                v = m_spel.GetVar(cmbVars.Text);
-                txtVarValue.Text = v.ToString();
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    Object v;
+            //    v = m_spel.GetVar(cmbVars.Text);
+            //    txtVarValue.Text = v.ToString();
+            //}
+            //catch (SpelException ex)
+            //{
+            //    throw ex;
+            //   // MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -343,7 +347,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+               // MessageBox.Show(ex.Message);
             }
         }
 
@@ -355,7 +360,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+               // MessageBox.Show(ex.Message);
             }
         }
 
@@ -367,7 +373,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+                // MessageBox.Show(ex.Message);
             }
 
         }
@@ -386,7 +393,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+                // MessageBox.Show(ex.Message);
             }
         }
 
@@ -403,7 +411,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+                // MessageBox.Show(ex.Message);
             }
         }
 
@@ -415,7 +424,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+                // MessageBox.Show(ex.Message);
             }
         }
 
@@ -427,22 +437,12 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+                // MessageBox.Show(ex.Message);
             }
         }
 
-        private void btnWrite_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                m_spel.SetVar(cmbVars.Text, txtVarValue.Text);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+       
 
         public void m_spel_EventReceived(object sender, SpelEventArgs e)
         {
@@ -534,124 +534,46 @@ namespace Demo1
         private void button3_Click(object sender, EventArgs e)
         {
 
-            try
-            {
-                m_spel.SetVar("g_CcdX", txtg_CcdX.Text);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.SetVar("g_CcdY", txtg_CcdY.Text);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            try
-            {
-                m_spel.SetVar("g_CcdZ", txtg_CcdZ.Text);
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
 
         private void btnReadg_CcdX_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Object v;
-                v = m_spel.GetVar("g_CcdX");
-                txtg_CcdX.Text = v.ToString();
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
 
         private void btnReadg_CcdY_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Object v;
-                v = m_spel.GetVar("g_CcdY");
-                txtg_CcdY.Text = v.ToString();
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
 
         private void btnReadg_CcdZ_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Object v;
-                v = m_spel.GetVar("g_CcdZ");
-                txtg_CcdZ.Text = v.ToString();
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
 
         private void btnBit0On_Click(object sender, EventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null)
-            {
-                int BitNumber = Convert.ToInt16(button.Tag);
-                m_spel.MemOn(BitNumber);
-            }
+            
         }
 
         private void btnBit0Off_Click(object sender, EventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null)
-            {
-                int BitNumber = Convert.ToInt16(button.Tag);
-                m_spel.MemOff(BitNumber);
-            }
+            
         }
 
         private void btnFunctionRun_Click(object sender, EventArgs e)
         {
 
-            try
-            {
-                btnStart.Enabled = false;
-                btnPause.Enabled = true;
-                btnCont.Enabled = false;
-                btnStop.Enabled = true;
-                Button button = sender as Button;
-                int FuncNumber = 0;
-                if (button != null)
-                {
-                    FuncNumber = Convert.ToInt16(button.Tag);
-                }
-                m_spel.Start(FuncNumber);
-                m_spel.WaitCommandComplete();
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         static void ContinueActionControl()
@@ -669,529 +591,402 @@ namespace Demo1
             }
         }
 
-        static void AE01_MovetoLasermeasurement()
-        {
-       
+        //static void AE01_MovetoLasermeasurement(float ccdX, float ccdY)
+        //{
+        //    AddLog(" ===== AE01 =====");
+        //    AddLog("AE01.1 Set  g_CcdX,  g_CcdY "); 
 
-            SendUdpMessage("===== AE01 =====");
-            TextBoxTextAppendChange("txtLog", "AE01​ 移到產品上方用雷射測距儀測距離 (z軸固定位置, 固定角度) ");
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdX", ccdX);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        //MessageBox.Show(ex.Message);
+        //    }
 
-            // 1.Set  g_CcdX,  g_CcdY
-            TextBoxTextAppendChange("txtLog", "1.Set  g_CcdX,  g_CcdY");
-            try
-            {
-                m_spel.SetVar("g_CcdX", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            try
-            {
-                m_spel.SetVar("g_CcdY", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            // 2.Move to Point  
-            TextBoxTextAppendChange("txtLog", "2.Move to Point LaserMeasurement (Main1)");
-            SendUdpMessage("2.Move to Point LaserMeasurement (Main1)");
-             
-            try
-            {               
-                //SendUdpMessage("TasksExecuting:"+ m_spel.TasksExecuting());
-                m_spel.Start(1);
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdY", ccdY);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        // MessageBox.Show(ex.Message);
+        //    }
+                        
+        //    AddLog("AE01.2 Move to Point LaserMeasurement (Main1)");            
+        //    try
+        //    {               
+        //        //SendUdpMessage("TasksExecuting:"+ m_spel.TasksExecuting());
+        //        m_spel.Start(1);
               
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //     //   MessageBox.Show(ex.Message);
+        //    }
 
-             SpinWait.SpinUntil(() => (m_spel.MemSw(31) && m_spel.MemSw(32)), RobotTimeOutInterval);
-            
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(31) && m_spel.MemSw(32)), RobotTimeOutInterval);
 
-            SendUdpMessage("m_spel.Start(1) Finished");
-            
+        //    AddLog("m_spel.Start(1) Finished");
+        //    AddLog("----- AE01 -----");
+        //    AddLog("");
 
-            // 3.LaserMeasurementHeight = Get LaserMeasurement Value
-            SendUdpMessage("AE01 3.LaserMeasurementHeight");
-            TextBoxTextAppendChange("txtLog", "3.LaserMeasurementHeight = Get LaserMeasurement Value ");
-            LaserMeasureValue = 10.33;
-
-            SendUdpMessage("----- AE01 -----");
-            SendUdpMessage("");
-            ContinueActionControl();
-        }
+        //}
 
         private void btnMovetoLasermeasurement_Click(object sender, EventArgs e)
         {
-             AE01_MovetoLasermeasurement();
+            float g_CcdX = (float)Convert.ToDouble(txtStep1_g_CcdX.Text);
+            float g_CcdY = (float)Convert.ToDouble(txtStep1_g_CcdY.Text);
+            epsonRobot.AE01_MovetoLasermeasurement(g_CcdX, g_CcdY);
         }
 
 
-        static void AE02_CcdMoveDetectionElements()
-        {
-            // 1.Set  g_CcdX,  g_CcdY
-            SendUdpMessage("===== AE02 =====");
-            TextBoxTextAppendChange("txtLog", "AE02 移到產品上方");
-            TextBoxTextAppendChange("txtLog", "1.Set  g_CcdX,  g_CcdY, g_CcdZ ");
-            try
-            {
-                m_spel.SetVar("g_CcdX", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        //static void AE02_CcdMoveDetectionElements(float ccdX, float ccdY, float ccdZ)
+        //{
+        //    AddLog("===== AE02 =====");
+        //    AddLog("AE02.1 Set  g_CcdX,  g_CcdY, g_CcdZ ");
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdX", ccdX);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
 
-            try
-            {
-                m_spel.SetVar("g_CcdY", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdY", ccdY);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
 
-            try
-            {
-                m_spel.SetVar("g_CcdZ","100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        //    try
+        //    {
+               
+        //        m_spel.SetVar("g_CcdZ", ccdY);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
 
-            // 2.Move to Point  
-            TextBoxTextAppendChange("txtLog", "2.Move to Point ElementTop (Main2)");
-            int mainid = 2;
-            try
-            {
-                SendUdpMessage(" m_spel.Start(2)");
-                m_spel.Start(mainid);
+        //    // 2.Move to Point  
+        //    AddLog("AE02.2 Move to Point ElementTop (Main2)");
+        //    int mainid = 2;
+        //    try
+        //    {
+        //        SendUdpMessage(" m_spel.Start(2)");
+        //        m_spel.Start(mainid);
                 
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            SpinWait.SpinUntil(() => (m_spel.MemSw(33) && m_spel.MemSw(34)), RobotTimeOutInterval);
-            TextBoxTextAppendChange("txtLog", "m_spel.Start(2) Finished");
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(33) && m_spel.MemSw(34)), RobotTimeOutInterval);
+            
+        //    AddLog("m_spel.Start(2) Finished");
+        //    AddLog("----- AE02 -----");
+        //    AddLog("");
 
-
-            // 3.LaserMeasurementHeight = Get LaserMeasurement Value
-            TextBoxTextAppendChange("txtLog", "3.Snap and Calcuate ElementPick_X, ElementPick_Y, ElementPick_Z, GO_NG ");
-            SendUdpMessage("AE02 3.Snap and Calcuate ElementPick_X, ElementPick_Y, ElementPick_Z, GO_NG ");
-            ElementPick_X = 11.11;
-            ElementPick_Y = 22.22;
-            ElementPick_Z = 33.33;
-
-            SendUdpMessage("----- AE02 -----");
-            SendUdpMessage("");
-
-            ContinueActionControl();
-        }
+        //}
 
         private void btnMovetoElementTop_Click(object sender, EventArgs e)
         {
-            AE02_CcdMoveDetectionElements();
+            float g_CcdX = (float)Convert.ToDouble(txtStep2_g_CcdX.Text);
+            float g_CcdY = (float)Convert.ToDouble(txtStep2_g_CcdY.Text);
+            float g_CcdZ = (float)Convert.ToDouble(txtStep2_g_CcdZ.Text);
+          
+
+            epsonRobot.AE02_CcdMoveDetectionElements(g_CcdX, g_CcdY, g_CcdZ);
 
         }
 
-        static void AE03_MovetoElementPickAndBlowWaitArea(int PickElementID)
+
+        static void AddLog( string msg )
         {
-            // 1.Set  g_CcdX,  g_CcdY
-            SendUdpMessage("===== AE03 =====");
-            TextBoxTextAppendChange("txtLog", "AE03 移到產品側邊吸取產品 並移到吹氣等待區");
-            TextBoxTextAppendChange("txtLog", "1.Set  g_CcdX,  g_CcdY, g_CcdZ");
-            try
-            {
-                m_spel.SetVar("g_CcdX", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            try
-            {
-                m_spel.SetVar("g_CcdY", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            try
-            {
-                m_spel.SetVar("g_CcdZ", "100");
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            // 2.Move to Point 
-            TextBoxTextAppendChange("txtLog", "2.Move to Point ElementPick (Main3)");
-            
-            try
-            {
-                SendUdpMessage("m_spel.Start(3)");
-                m_spel.Start(3);
-                
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-           
-            SpinWait.SpinUntil(() => (m_spel.MemSw(35) && m_spel.MemSw(36)), RobotTimeOutInterval);
-            TextBoxTextAppendChange("txtLog", "m_spel.Start(3) Finished");
-            SendUdpMessage("m_spel.Start(3) Finished");
-
-            //  將取走 Element PickFinished 標記為 1
-            var SelectProcessArea = ProcessArea.Where(x => x.ElementId.Equals(PickElementID)).FirstOrDefault();
-            if (SelectProcessArea != null)
-            {
-                SelectProcessArea.PickFinished = 1;
-                robotNozzleHaveElement = true;
-            }
-            DumpSystemStatus();
-            SendUdpMessage("----- AE03 -----");
-            SendUdpMessage("");
-            ContinueActionControl();
+            TextBoxTextAppendChange("txtLog", msg);
+            SendUdpMessage(msg);
         }
+
+        //static void AE03_MovetoElementPickAndBlowWaitArea(float g_CcdX, float g_CcdY, float g_CcdZ)
+        //{
+        //    // 1.Set  g_CcdX,  g_CcdY
+        //    AddLog("===== AE03 =====");          
+        //    AddLog("AE03.1 Set  g_CcdX,  g_CcdY, g_CcdZ");
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdX", g_CcdX);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        //MessageBox.Show(ex.Message);
+        //    }
+
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdY", g_CcdY);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        // MessageBox.Show(ex.Message);
+        //    }
+
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdZ", g_CcdZ);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
+
+        //    // 2.Move to Point 
+        //    AddLog("AE03.2 Move to Point ElementPick (Main3)");
+            
+        //    try
+        //    {
+        //        SendUdpMessage("m_spel.Start(3)");
+        //        m_spel.Start(3);
+                
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        // MessageBox.Show(ex.Message);
+        //    }
+
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(35) && m_spel.MemSw(36)), RobotTimeOutInterval);
+
+        //    AddLog("m_spel.Start(3) Finished");
+        //    AddLog("----- AE03 -----");
+        //    AddLog("");
+
+        //}
 
         private void btnMovetoElementPickAndBlowWaitArea_Click(object sender, EventArgs e)
         {
-             AE03_MovetoElementPickAndBlowWaitArea(1);
+            float g_CcdX = (float)Convert.ToDouble(txtStep3_g_CcdX.Text);
+            float g_CcdY = (float)Convert.ToDouble(txtStep3_g_CcdY.Text);
+            float g_CcdZ = (float)Convert.ToDouble(txtStep3_g_CcdZ.Text);
+            epsonRobot.AE03_MovetoElementPickAndBlowWaitArea(g_CcdX, g_CcdY, g_CcdZ);
 
 
         }
 
-        static void AE06_PickBlowElements()
-        {
-            SendUdpMessage("===== AE06 =====");
-            TextBoxTextAppendChange("txtLog", "AE06 PickBlowElements");
+        //static void AE06_PickBlowElements(int StagePickID)
+        //{
+        //    AddLog("===== AE06 =====");
+        //    AddLog("AE06.1 Stage Pick ID:" + StagePickID.ToString());
+             
+        //    if (StagePickID == 1) // 位置 1
+        //    {
+        //        // 位置1,2 互斥, 比免兩個同時true
+        //        m_spel.MemOn(2);
+        //        m_spel.MemOff(3);
+        //    }
+        //    if (StagePickID == 2) // 位置 2
+        //    {
+        //        // 位置1,2 互斥, 比免兩個同時true
+        //        m_spel.MemOff(2);
+        //        m_spel.MemOn(3);
+        //    }
 
-            TextBoxTextAppendChange("txtLog", "1.Wait Blow Stage  if ready");
-            if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
-            {
-                var myWorkingBlowStagePick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
-                TextBoxTextAppendChange("txtLog", "2.check finished , and get finished id");
-                if (myWorkingBlowStagePick != null)
-                {
-                    TextBoxTextAppendChange("txtLog", "Pick Select Id:" + myWorkingBlowStagePick.Id.ToString());
-                    TextBoxTextAppendChange("txtLog", "3.Set id ");
-                    if (myWorkingBlowStagePick.Id == 1) // 位置 1
-                    {
-                        // 位置1,2 互斥, 比免兩個同時true
-                        m_spel.MemOn(2);
-                        m_spel.MemOff(3);
-                    }
-                    if (myWorkingBlowStagePick.Id == 2) // 位置 2
-                    {
-                        // 位置1,2 互斥, 比免兩個同時true
-                        m_spel.MemOff(2);
-                        m_spel.MemOn(3);
-                    }
+        //    AddLog("AE06.2 Move to BlowAirPick  (Main6)");
 
-                    TextBoxTextAppendChange("txtLog", "4.Move to BlowAirPick  (Main6)");
-                    
-                    try
-                    {
-                        SendUdpMessage("m_spel.Start(6)");
-                        TextBoxTextAppendChange("txtLog", "m_spel.Start(6)");
-                   //     SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-                        m_spel.Start(6);
-                        
-                    }
-                    catch (SpelException ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                  //  SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-                    SpinWait.SpinUntil(() => (m_spel.MemSw(45)), RobotTimeOutInterval);
-                    m_spel.MemOn(0);  
-                    SpinWait.SpinUntil(() => (m_spel.MemSw(46)), RobotTimeOutInterval);
+        //    try
+        //    {
+               
+        //        AddLog("m_spel.Start(6)");
+        //        //     SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
+        //        m_spel.Start(6);
 
-                    TextBoxTextAppendChange("txtLog", "m_spel.Start(6) Finished");
-                    SendUdpMessage("m_spel.Start(6) Finished");
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        //MessageBox.Show(ex.Message);
+        //    }
+        //    //  SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(45)), RobotTimeOutInterval);
+        //    m_spel.MemOn(0);
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(46)), RobotTimeOutInterval);
 
-                    Pick2FinishedElementID = myWorkingBlowStagePick.ElementId;
+        //    AddLog("m_spel.Start(6) Finished");
+        //    AddLog("----- AE06 -----");
+        //    AddLog("");
 
-                    myWorkingBlowStagePick.BlowLocationStatus = BlowLocationState.RedayToPlace;
-                    myWorkingBlowStagePick.ElementId = 0;
-                    robotNozzleHaveElement = true;
-                }
 
-            }
-            SendUdpMessage("----- AE06 -----");
-            SendUdpMessage("");
-            ContinueActionControl();
-        }
+        //}
+
         private  void btnMovetoBlowAirPick_Click(object sender, EventArgs e)
         {
-            
-             AE06_PickBlowElements();
+            int Step6_id = Convert.ToInt16(txtStep6_id.Text);
+            epsonRobot.AE06_PickBlowElements(Step6_id);
 
 
 
         }
 
-        static void AE07_PlaceBlowElements(int ProcessElementID)
-        {
-            SendUdpMessage("===== AE07 =====");
-            TextBoxTextAppendChange("txtLog", "AE07 PlaceBlowElements");
+        //static void AE07_PlaceBlowElements(int StagePlaceId)
+        //{
+        //    AddLog("===== AE07 =====");
+        //    AddLog("AE07.1 Stage Place Id " + StagePlaceId.ToString());
+        //    if (StagePlaceId == 1) // 位置 1
+        //    {
+        //        // 位置1,2 互斥, 比免兩個同時true
+        //        m_spel.MemOff(3);
+        //        m_spel.MemOn(2);
 
-            TextBoxTextAppendChange("txtLog", "1.Wait Blow Stage  if ready ,and no finished");
-            if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
-            {
-                var myWorkingBlowStagePick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
+        //    }
+        //    if (StagePlaceId == 2) // 位置 2
+        //    {
+        //        // 位置1,2 互斥, 比免兩個同時true
+        //        m_spel.MemOff(2);
+        //        m_spel.MemOn(3);
+        //    }
 
-                if (myWorkingBlowStagePick == null)
-                {
-                    var myWorkingBlowStagePlace = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).FirstOrDefault();
-                    if (myWorkingBlowStagePlace != null)
-                    {
+        //    //Move to Point  
+        //    AddLog("AE07.2 Move to Point PlaceBlowElements (Main7)");
 
-                        TextBoxTextAppendChange("txtLog", "2.Place Select Id:" + myWorkingBlowStagePlace.Id.ToString());
+        //    try
+        //    {
+                
+        //        AddLog("m_spel.Start(7)");
+        //        //    SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
+        //        m_spel.Start(7);
 
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        // MessageBox.Show(ex.Message);
+        //    }
+        //    //  Main7 'PlaceBlowElements
+        //    //          MoveBlowElementsPosition1or2 --> PutBlowElement_OK
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(47)), RobotTimeOutInterval);
 
-                        TextBoxTextAppendChange("txtLog", "3.Set id ");
-                        if (myWorkingBlowStagePlace.Id == 1) // 位置 1
-                        {
-                            // 位置1,2 互斥, 比免兩個同時true
-                            m_spel.MemOff(3);
-                            m_spel.MemOn(2);
-                           
-                        }
-                        if (myWorkingBlowStagePlace.Id == 2) // 位置 2
-                        {
-                            // 位置1,2 互斥, 比免兩個同時true
-                            m_spel.MemOff(2);
-                            m_spel.MemOn(3);
-                        }
+        //    if (m_spel.MemSw(47) == false)
+        //    {
+        //        // 逾時處理...#001 待討論
+        //        // 
+        //    }
 
-                        //Move to Point  
-                        TextBoxTextAppendChange("txtLog", "4.Move to Point PlaceBlowElements (Main7)");
-                         
-                        try
-                        {
-                            SendUdpMessage("m_spel.Start(7)");
-                            TextBoxTextAppendChange("txtLog", "m_spel.Start(7)");
-                        //    SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-                            m_spel.Start(7);
+        //    // 
+        //    m_spel.MemOn(1);
 
-                        }
-                        catch (SpelException ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                        //  Main7 'PlaceBlowElements
-                        //          MoveBlowElementsPosition1or2 --> PutBlowElement_OK
-                        SpinWait.SpinUntil(() => (m_spel.MemSw(47)), RobotTimeOutInterval);
-
-                        if (m_spel.MemSw(47)==false)
-                        {
-                            // 逾時處理...#001 待討論
-                            // 
-                        }
-
-
-                        m_spel.MemOn(1);
-
-                        SpinWait.SpinUntil(() => (m_spel.MemSw(48)), RobotTimeOutInterval);
-                      //  SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-                        SendUdpMessage("m_spel.Start(7) Finished");
-
-
-                        // 將該 Id 狀態改為  WaitProcess
-                        myWorkingBlowStagePlace.BlowLocationStatus = BlowLocationState.WaitProcess;
-                        myWorkingBlowStagePlace.ElementId = ProcessElementID;
-
-                        ContinueActionControl();
-
-                    }
-                }
-                else
-                {
-                    var myWorkingBlowStagePlace = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).FirstOrDefault();
-                    if (myWorkingBlowStagePlace != null)
-                    {
-
-                        TextBoxTextAppendChange("txtLog", "2.Place Select Id:" + myWorkingBlowStagePlace.Id.ToString());
-
-
-                        TextBoxTextAppendChange("txtLog", "3.Set id ");
-                        if (myWorkingBlowStagePlace.Id == 1) // 位置 1
-                        {
-                            // 位置1,2 互斥, 比免兩個同時true                           
-                            m_spel.MemOff(3);
-                            m_spel.MemOn(2);
-                        }
-                        if (myWorkingBlowStagePlace.Id == 2) // 位置 2
-                        {
-                            // 位置1,2 互斥, 比免兩個同時true
-                            m_spel.MemOff(2);
-                            m_spel.MemOn(3);
-                        }
-
-                        //Move to Point  
-                        TextBoxTextAppendChange("txtLog", "4.Move to Point PlaceBlowElements (Main7)");
-                        
-                        try
-                        {
-                            SendUdpMessage("m_spel.Start(7)");
-                            TextBoxTextAppendChange("txtLog", "m_spel.Start(7)");
-                            m_spel.Start(7);
-
-                        }
-                        catch (SpelException ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                        // MoveBlowElementsPosition1or2 --> PutBlowElement_OK
-                        SpinWait.SpinUntil(() => (m_spel.MemSw(47)), RobotTimeOutInterval);
-
-                        if (m_spel.MemSw(47) == false)
-                        {
-                            // 逾時處理...#001 待討論
-                            // 
-                        }
-
-                        m_spel.MemOn(1);
-
-                        SpinWait.SpinUntil(() => (m_spel.MemSw(48)), RobotTimeOutInterval);
-                        SendUdpMessage("m_spel.Start(7) Finished");
-
-
-                        // 將該 Id 狀態改為  WaitProcess
-                        myWorkingBlowStagePlace.BlowLocationStatus = BlowLocationState.WaitProcess;
-                        myWorkingBlowStagePlace.ElementId = ProcessElementID;
-
-                        ContinueActionControl();
-                    }
-                }
-
-            }
-            SendUdpMessage("----- AE07 -----");
-            SendUdpMessage("");
-        }
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(48)), RobotTimeOutInterval);
+        //    //  SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
+        //    if (m_spel.MemSw(48) == false)
+        //    {
+        //        // 逾時處理...#002 待討論
+        //        // 
+        //    }
+        //    AddLog("m_spel.Start(7) Finished");
+        //    AddLog("----- AE07 -----");
+        //    AddLog("");
+        //}
+       
         private  void btnMovetoBlowAirPlace_Click(object sender, EventArgs e)
         {
-             AE07_PlaceBlowElements(1);
+            int Step7_id = Convert.ToInt16(txtStep7_id.Text);
+            epsonRobot.AE07_PlaceBlowElements(Step7_id);
 
         }
 
-        static void AE04_MvoeNgPosition(int ThrowElementId)
-        {
-            SendUdpMessage("===== AE04 =====");
-            TextBoxTextAppendChange("txtLog", "4.MovetoNGArea");
-            int mainid = 4;
-            try
-            {
-                SendUdpMessage("m_spel.Start(4)");
-                m_spel.Start(mainid);
-                
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            robotNozzleHaveElement = false;
-
-            SpinWait.SpinUntil(() => (m_spel.MemSw(37) && m_spel.MemSw(38)), RobotTimeOutInterval);
-            TextBoxTextAppendChange("txtLog", "m_spel.Start(4) Finished");
-            SendUdpMessage("m_spel.Start(4) Finished");
-
-            //  將取走 Drop PlaceOrThrowFinished 標記為 1
-            var SelectProcessArea = ProcessArea.Where(x => x.ElementId.Equals(ThrowElementId)).FirstOrDefault();
-            if (SelectProcessArea != null)
-            {
-                SelectProcessArea.PlaceOrThrowFinished = 1;
-                robotNozzleHaveElement = false;
-
-                // 將完成資料寫入  FinishArea
-                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
-                processFinishRow.Id = SelectProcessArea.ElementId;
-                processFinishRow.CcdX = 0;
-                processFinishRow.CcdY = 0;
-                processFinishRow.CcdZ = 0;
-                processFinishRow.Finished = 1;
-                processFinishRow.FinishDateTime = DateTime.Now;
-                processFinishRow.Go_NG = SelectProcessArea.Go_NG;
-                FinishArea.Add(processFinishRow);
-
-            }
-
-            SendUdpMessage("----- AE04 -----");
-            SendUdpMessage("");
+        //static void AE04_MovetoNGArea()
+        //{
+        //    AddLog("===== AE04 =====");
             
-            DumpSystemStatus();
-        }
+        //    int mainid = 4;
+        //    try
+        //    {
+        //        AddLog("m_spel.Start(4)");
+        //        m_spel.Start(mainid);
+                
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
+
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(37) && m_spel.MemSw(38)), RobotTimeOutInterval);
+
+        //    AddLog("m_spel.Start(4) Finished");             
+        //    SendUdpMessage("----- AE04 -----");
+        //    SendUdpMessage("");
+        //}
+
         private  void BtnMovetoNGArea_Click(object sender, EventArgs e)
         {
-             AE04_MvoeNgPosition(1);
+            epsonRobot.AE04_MovetoNGArea();
 
         }
 
-        static void AE05_MovePutElementsPosition()
-        {
-            SendUdpMessage("===== AE05 =====");
-            TextBoxTextAppendChange("txtLog", "AE05 MovePutElementsPosition");
-            bool a = m_spel.TasksExecuting();
+        //static void AE05_MovePutElementsPosition(float ccdX, float ccdY)
+        //{
+        //    AddLog("===== AE05 =====");
+        //    AddLog("AE05.1 Assign ccdX, ccdY");
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdX", ccdX);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        //MessageBox.Show(ex.Message);
+        //    }
 
+        //    try
+        //    {
+        //        m_spel.SetVar("g_CcdY", ccdY);
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //        // MessageBox.Show(ex.Message);
+        //    }
 
-            try
-            {
-                SendUdpMessage("m_spel.Start(5)");
-                TextBoxTextAppendChange("txtLog", "m_spel.Start(5)");       
-                m_spel.Start(5);                 
-            }
-            catch (SpelException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            //SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-            SpinWait.SpinUntil(() => (m_spel.MemSw(39) && m_spel.MemSw(40)), RobotTimeOutInterval);
-           // SendUdpMessage("TasksExecuting:" + m_spel.TasksExecuting());
-            TextBoxTextAppendChange("txtLog", "m_spel.Start(5) Finished");
-            SendUdpMessage("m_spel.Start(5) Finished");
+        //    AddLog("AE05.2 MovePutElementsPosition");           
 
-            var myProcessArea = ProcessArea.Where(p => p.ElementId.Equals(Pick2FinishedElementID)).FirstOrDefault();
-            if (myProcessArea != null)
-            {
-                myProcessArea.PlaceOrThrowFinished = 1;
-                robotNozzleHaveElement = false;
+        //    try
+        //    {                 
+        //        AddLog( "m_spel.Start(5)");       
+        //        m_spel.Start(5);                 
+        //    }
+        //    catch (SpelException ex)
+        //    {
+        //        throw ex;
+        //       // MessageBox.Show(ex.Message);
+        //    }
+            
+        //    SpinWait.SpinUntil(() => (m_spel.MemSw(39) && m_spel.MemSw(40)), RobotTimeOutInterval);
+             
 
-                // 將完成資料寫入  FinishArea
-                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
-                processFinishRow.Id = myProcessArea.ElementId;
-                processFinishRow.CcdX = 0;
-                processFinishRow.CcdY = 0;
-                processFinishRow.CcdZ = 0;
-                processFinishRow.Finished = 1;
-                processFinishRow.FinishDateTime = DateTime.Now;
-                processFinishRow.Go_NG = myProcessArea.Go_NG;
+        //    AddLog("m_spel.Start(5) Finished");
+        //    AddLog("----- AE05 -----");
+        //    AddLog("");
 
-                FinishArea.Add(processFinishRow);
+        //}
 
-            }
-            SendUdpMessage("----- AE05 -----");
-            SendUdpMessage("");
-            ContinueActionControl();
-        }
          void btnMovetoFinishAreaPlace_Click(object sender, EventArgs e)
         {
-             AE05_MovePutElementsPosition();
-
-
+            epsonRobot.AE05_MovePutElementsPosition(10,10);
         }
 
        
@@ -1212,17 +1007,27 @@ namespace Demo1
             BlowAir_Working_loop = true;
             //  Blow Stage Init
             StageStatus = StageState.WaitPickOrPlaceOrProcess;
-
-          //  while (BlowAir_Working_loop)
+            if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
+            {
+                this.Invoke(new Action(() => lblStageStatus.BackColor = Color.LimeGreen));
+            }
+            //  while (BlowAir_Working_loop)
             while (!cancelTokenSourceBlowAir.IsCancellationRequested)
                 {
+
+               
+              
+
                 var BlowStage_WaitPick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
                
                 var BlowStage_process = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.WaitProcess)).FirstOrDefault();
+                
                 if ((BlowStage_WaitPick == null) && (BlowStage_process != null))
                 {
                     BlowStage_process.BlowLocationStatus = BlowLocationState.Process;
                     StageStatus = StageState.Processing;
+                    this.Invoke(new Action(() => lblStageStatus.Text = StageStatus.ToString()));
+                    this.Invoke(new Action(() => lblStageStatus.BackColor = Color.LightPink));
                     DumpSystemStatus();
                     SpinWait.SpinUntil(() => false, 100);
                     // Motion control 
@@ -1232,54 +1037,89 @@ namespace Demo1
                     //  4. 移動到吹氣等待區
                     Console.WriteLine("1. 移動到吹氣位置");
                     Console.WriteLine("2. 吹氣 ElementID:" + BlowStage_process.ElementId.ToString());
-                    Console.WriteLine("3. 吹 5秒結束吹氣, 並將狀態改為 ReadyToPick");
+                    Console.WriteLine("3. 吹 N 秒結束吹氣, 並將狀態改為 ReadyToPick");
                     Console.WriteLine("4. 移動到吹氣等待區");
-                    SpinWait.SpinUntil(() => false, 7000);
+                    SpinWait.SpinUntil(() => false, 12000);
                     // Change Process --> ReadyPick
-                    BlowStage_process.BlowLocationStatus = BlowLocationState.RedayToPick;
-
-                    DumpSystemStatus();
+                    BlowStage_process.BlowLocationStatus = BlowLocationState.RedayToPick;                    
                     StageStatus = StageState.WaitPickOrPlaceOrProcess;
+                    this.Invoke(new Action(() => lblStageStatus.Text = StageStatus.ToString()));
+                    this.Invoke(new Action(() => lblStageStatus.BackColor = Color.LimeGreen));
+                    DumpSystemStatus();
                 }
                 else
                 {
-                    SpinWait.SpinUntil(() => false, 1000);
+                    SpinWait.SpinUntil(() => false, 2000);
                     DumpSystemStatus();
-                    Console.WriteLine("BlowAirProcess loop");
+                    //Console.WriteLine("BlowAirProcess loop");
                 }
             }
             Console.WriteLine("BlowAirProcess End");
         }
 
-        static void AutoRun()
+         void AutoRun()
         {
             while ((!cancelTokenSourceAutoRun.IsCancellationRequested))
-            {
-                // 如有 BlowAir 有要 pick, 先處理
+            {                
+
                 SendUdpMessage("***** AutoRun Loop");
                 var myWorkingBlowStagePick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
-                if (myWorkingBlowStagePick != null)
-                {      
-                    if (PickProcessMode ==  0) 
-                    {
-                        AE06_PickBlowElements();
-                        AE05_MovePutElementsPosition();
-                    }
+                if (myWorkingBlowStagePick != null)                {
 
-                    if (PickProcessMode == 1) 
+                    if (PickProcessMode == ProcessMode.PlaceElementFirst) 
                     {
                         if ((WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).Count() == 1) && (ProcessArea.Where(p => p.PickFinished.Equals(0)).Count() > 0))
                         {
-                            Console.WriteLine("優先取料");
+                            Console.WriteLine("工作區仍有處理element, 優先取料");
                         }
                         else
-                        {
-                            AE06_PickBlowElements();
-                            AE05_MovePutElementsPosition();
+                        {      
+                            // only last element 
+                            if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
+                            {
+                                epsonRobot.AE06_PickBlowElements(myWorkingBlowStagePick.Id);
+                                Pick2FinishedElementID = myWorkingBlowStagePick.ElementId;
+                                myWorkingBlowStagePick.BlowLocationStatus = BlowLocationState.RedayToPlace;
+                                myWorkingBlowStagePick.ElementId = 0;
+
+                                if (myWorkingBlowStagePick.Id == 1) { this.Invoke(new Action(() => StageElementId1.Text = "0")); }
+                                if (myWorkingBlowStagePick.Id == 2) { this.Invoke(new Action(() => StageElementId2.Text = "0")); }
+
+                                this.Invoke(new Action(() => RobotElementId.Text = Pick2FinishedElementID.ToString()));
+
+                                robotNozzleHaveElement = true;
+
+
+                                DumpSystemStatus();
+                                ContinueActionControl();
+                            }
+
+
+                            epsonRobot.AE05_MovePutElementsPosition((float)-252.433, (float)191.144);
+                            var myProcessArea = ProcessArea.Where(p => p.ElementId.Equals(Pick2FinishedElementID)).FirstOrDefault();
+                            if (myProcessArea != null)
+                            {
+                                myProcessArea.PlaceOrThrowFinished = 1;
+                                robotNozzleHaveElement = false;
+                                this.Invoke(new Action(() => RobotElementId.Text = ""));
+
+                                // 將完成資料寫入  FinishArea
+                                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
+                                processFinishRow.Id = myProcessArea.ElementId;
+                                processFinishRow.CcdX = 0;
+                                processFinishRow.CcdY = 0;
+                                processFinishRow.CcdZ = 0;
+                                processFinishRow.Finished = 1;
+                                processFinishRow.FinishDateTime = DateTime.Now;
+                                processFinishRow.Go_NG = myProcessArea.Go_NG;
+
+                                FinishArea.Add(processFinishRow);
+                                this.Invoke(new Action(() => RobotElementId.Text = "0"));
+                            }
+                           
+                            ContinueActionControl();
                         }
                     }
-                        
-                   
                 }
 
 
@@ -1292,44 +1132,140 @@ namespace Demo1
                     {
                         Console.WriteLine(String.Format("ElementId={0}, StageStatus={1} ", item.ElementId, item.BlowLocationStatus));
                     }
-
+                    SpinWait.SpinUntil(()=> (StageStatus == StageState.WaitPickOrPlaceOrProcess), -1);
                 }
 
                 else
                 {
-                    // Check 吹氣區可以 Place 數量
+                    // Check 吹氣區可以 Place 
                     var myWorkingBlowStagePlace = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).FirstOrDefault();
-                    // 取 element
-                    var SelectProcessArea = ProcessArea.Where(p => p.PickFinished.Equals(0)).OrderByDescending(p => p.CcdY).OrderByDescending(p => p.CcdX).FirstOrDefault();
+                    //  取  element
+                    //  var SelectProcessArea = ProcessArea.Where(p => p.PickFinished.Equals(0)).OrderByDescending(p => p.CcdY).OrderByDescending(p => p.CcdX).FirstOrDefault();
+                    var SelectProcessArea = ProcessArea.Where(p => p.PickFinished.Equals(0)).OrderByDescending(p => p.ElementId).FirstOrDefault();
+                    
                     if ((SelectProcessArea != null) && (myWorkingBlowStagePlace != null))
                     {
-
+                        #region 有需要捉取 element ,且 Stage 可以 Place
+                        Console.WriteLine("StageStatus:" + StageStatus.ToString());
                         TextBoxTextAppendChange("txtLog", "Process Element:" + SelectProcessArea.ElementId);
 
+                        epsonRobot.AE01_MovetoLasermeasurement((float)285.433, (float)-14.416);
+
+                        // 3.LaserMeasurementHeight = Get LaserMeasurement Value
+                        SendUdpMessage("AE01.3 LaserMeasurementHeight");
+                        AddLog("AE01.3 LaserMeasurementHeight = Get LaserMeasurement Value ");
+                        LaserMeasureValue = 10.33;
+
+                        epsonRobot.AE02_CcdMoveDetectionElements((float)285.808, (float)-14.416, (float)-30);
+
+                        // 3.LaserMeasurementHeight = Get LaserMeasurement Value
+                        AddLog("AE02.3 Snap and Calcuate ElementPick_X, ElementPick_Y, ElementPick_Z, GO_NG ");
                         
-                         AE01_MovetoLasermeasurement();
-                        
-                         AE02_CcdMoveDetectionElements();
-                        
-                         AE03_MovetoElementPickAndBlowWaitArea(SelectProcessArea.ElementId);
-                        
-                        DumpSystemStatus();
+                        ElementPick_X = 11.11;
+                        ElementPick_Y = 22.22;
+                        ElementPick_Z = 33.33;
+
+                       
+
+                        epsonRobot.AE03_MovetoElementPickAndBlowWaitArea((float)285.808, (float)35.384, (float)-104.416);
+
+                        //  將取走 Element PickFinished 標記為 1                        
+                        if (SelectProcessArea != null)
+                        {
+                            SelectProcessArea.PickFinished = 1;
+                            robotNozzleHaveElement = true;
+                            // RobotElementId
+                            this.Invoke(new Action(() => RobotElementId.Text = SelectProcessArea.ElementId.ToString()));
+                        }
+
+                        DumpSystemStatus();                       
+                        ContinueActionControl();
+
 
                         if (SelectProcessArea.Go_NG == true)
                         {
+                            // Second element , wait Stage ready
+                            SpinWait.SpinUntil(() => StageStatus == StageState.WaitPickOrPlaceOrProcess, -1 );
 
-                             AE07_PlaceBlowElements(SelectProcessArea.ElementId);
+                            #region Element_GO process
+                            AddLog("1.Wait Blow Stage  if ready ,and no finished");
+                            if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
+                            {
+                                myWorkingBlowStagePick = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPick)).FirstOrDefault();
+
+                                if (myWorkingBlowStagePick == null)
+                                {
+                                    myWorkingBlowStagePlace = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).FirstOrDefault();
+                                    if (myWorkingBlowStagePlace != null)
+                                    {
+                                        epsonRobot.AE07_PlaceBlowElements(myWorkingBlowStagePlace.Id);
+                                        // 將該 Id 狀態改為  WaitProcess
+                                        myWorkingBlowStagePlace.ElementId = SelectProcessArea.ElementId;
+                                        myWorkingBlowStagePlace.BlowLocationStatus = BlowLocationState.WaitProcess;
+                                        
+                                        if (myWorkingBlowStagePlace.Id== 1) { this.Invoke(new Action(() => StageElementId1.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
+                                        if (myWorkingBlowStagePlace.Id == 2) { this.Invoke(new Action(() => StageElementId2.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
+                                        
+                                        DumpSystemStatus();
+                                        ContinueActionControl();
+                                    }
+                                }
+                                else
+                                {
+                                     myWorkingBlowStagePlace = WorkingBlowStage.Where(p => p.BlowLocationStatus.Equals(BlowLocationState.RedayToPlace)).FirstOrDefault();
+                                    if (myWorkingBlowStagePlace != null)
+                                    {
+                                        epsonRobot.AE07_PlaceBlowElements(myWorkingBlowStagePlace.Id);
+                                        // 將該 Id 狀態改為  WaitProcess
+                                        myWorkingBlowStagePlace.ElementId = SelectProcessArea.ElementId;
+                                        myWorkingBlowStagePlace.BlowLocationStatus = BlowLocationState.WaitProcess;
+                                        
+                                        if (myWorkingBlowStagePlace.Id == 1) { this.Invoke(new Action(() => StageElementId1.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
+                                        if (myWorkingBlowStagePlace.Id == 2) { this.Invoke(new Action(() => StageElementId2.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
+                                        
+                                        DumpSystemStatus();
+                                        ContinueActionControl();
+                                    }
+                                }
+                            }
+                            #endregion
                         }
                         else
                         {
-                             AE04_MvoeNgPosition(SelectProcessArea.ElementId);
+                            #region Element_NG process
+                            epsonRobot.AE04_MovetoNGArea();
+
+                            //  將取走 Drop PlaceOrThrowFinished 標記為 1                           
+                            if (SelectProcessArea != null)
+                            {
+                                SelectProcessArea.PlaceOrThrowFinished = 1;
+                                robotNozzleHaveElement = false;
+
+                                // 將完成資料寫入  FinishArea
+                                ProcessFinishTbl processFinishRow = new ProcessFinishTbl();
+                                processFinishRow.Id = SelectProcessArea.ElementId;
+                                processFinishRow.CcdX = 0;
+                                processFinishRow.CcdY = 0;
+                                processFinishRow.CcdZ = 0;
+                                processFinishRow.Finished = 1;
+                                processFinishRow.FinishDateTime = DateTime.Now;
+                                processFinishRow.Go_NG = SelectProcessArea.Go_NG;
+                                FinishArea.Add(processFinishRow);
+
+                                this.Invoke(new Action(() => RobotElementId.Text = "0"));                                
+                            }
+
+                           
+
+                            DumpSystemStatus();
+                            ContinueActionControl();
+                            #endregion
                         }
 
 
-
-                        TextBoxTextAppendChange("txtLog", "--------");
-                        TextBoxTextAppendChange("txtLog", "");
                         DumpSystemStatus();
+
+                        #endregion
                     }
                     else
                     {
@@ -1462,7 +1398,8 @@ namespace Demo1
                 }
                 catch (SpelException ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    throw ex;
+                    //MessageBox.Show(ex.Message);
                 }
 
                
@@ -1475,18 +1412,18 @@ namespace Demo1
         {
             bool Rtn_data = false;
 
-
             int mainid = 1;
             isExecuteCmdFin = false;
             try
             {
                 SendUdpMessage("m_spel.Start(1)");
-                TextBoxTextAppendChange("txtLog", "m_spel.Start(1)");
+                AddLog("m_spel.Start(1)");
                m_spel.Start(mainid); 
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+               // MessageBox.Show(ex.Message);
             }
 
             // SpinWait.SpinUntil(() => (m_spel.MemSw(31) && m_spel.MemSw(32)) , RobotTimeOutInterval);
@@ -1504,18 +1441,20 @@ namespace Demo1
 
 
             Console.WriteLine("### Rtn_data:" + Rtn_data);
+
+
             //  用 controller 記憶體, 或 TasksExecuting 均可判斷作業是否正常完成
             //  1.m_spel.TasksExecuting()
             // 2.m_spel.MemSw(31) && m_spel.MemSw(32)
             if (m_spel.MemSw(31) && m_spel.MemSw(32))
             {
                 SendUdpMessage("m_spel.Start(1) Finished Normal");
-                TextBoxTextAppendChange("txtLog", "m_spel.Start(1) Finished");
+                AddLog("m_spel.Start(1) Finished");
             }
             else
             {
                 SendUdpMessage("m_spel.Start(1) Timeout");
-                TextBoxTextAppendChange("txtLog", "m_spel.Start(1) Timeout");
+                AddLog("m_spel.Start(1) Timeout");
             }
 
             SpelTaskState taskState;
@@ -1566,7 +1505,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+               // MessageBox.Show(ex.Message);
             }
         }
 
@@ -1591,7 +1531,8 @@ namespace Demo1
             }
             catch (SpelException ex)
             {
-                MessageBox.Show(ex.Message);
+                throw ex;
+               // MessageBox.Show(ex.Message);
             }
         }
 
@@ -1601,17 +1542,29 @@ namespace Demo1
             {
                new ProcessAreaTbl { ElementId=1, CcdX = 10.01, CcdY = 10.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
                new ProcessAreaTbl { ElementId=2, CcdX = 20.01, CcdY = 10.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
-               new ProcessAreaTbl { ElementId=3, CcdX = 30.01, CcdY = 10.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=false},
+               new ProcessAreaTbl { ElementId=3, CcdX = 30.01, CcdY = 10.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
                new ProcessAreaTbl { ElementId=4, CcdX = 10.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
-               new ProcessAreaTbl { ElementId=5, CcdX = 20.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=false},
+               new ProcessAreaTbl { ElementId=5, CcdX = 20.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
                new ProcessAreaTbl { ElementId=6, CcdX = 30.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
                new ProcessAreaTbl { ElementId=7, CcdX = 40.01, CcdY = 20.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
-
+               new ProcessAreaTbl { ElementId=8, CcdX = 10.01, CcdY = 30.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=9, CcdX = 20.01, CcdY = 30.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=10, CcdX = 30.01, CcdY = 30.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+                new ProcessAreaTbl { ElementId=11, CcdX = 10.01, CcdY = 40.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=12, CcdX = 20.01, CcdY = 40.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=13, CcdX = 30.01, CcdY = 40.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=14, CcdX = 10.01, CcdY = 50.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=15, CcdX = 20.01, CcdY = 50.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=16, CcdX = 30.01, CcdY = 50.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=17, CcdX = 40.01, CcdY = 60.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=18, CcdX = 10.01, CcdY = 60.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=19, CcdX = 20.01, CcdY = 60.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
+               new ProcessAreaTbl { ElementId=20, CcdX = 30.01, CcdY = 70.0, CcdZ= 0.0, PickFinished=0, PlaceOrThrowFinished=0, Go_NG=true},
             };
             FinishArea.Clear();
             Random rnd = new Random();
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 int ElementId = rnd.Next(0, ProcessArea.Count());
                 ProcessArea.Where(p => p.ElementId == ElementId).ToList().ForEach(x => x.Go_NG = false);
@@ -1644,9 +1597,37 @@ namespace Demo1
             CycleAutoRun = !CycleAutoRun;
             lbleCycleRun.Text = "Cycle Run=" + CycleAutoRun.ToString();
         }
+
+        private void btnMovePutElementsPosition_Click(object sender, EventArgs e)
+        {
+            float g_CcdX = (float)Convert.ToDouble(txtStep5_g_CcdX.Text);
+            float g_CcdY = (float)Convert.ToDouble(txtStep5_g_CcdY.Text);
+            epsonRobot.AE05_MovePutElementsPosition(g_CcdX, g_CcdY);
+        }
+
+        private void btnIsVirtualModel_Click(object sender, EventArgs e)
+        {
+            IsVirtualModel = !IsVirtualModel;
+            lblIsVirtualModel.Text = "IsVirtualModel=" + IsVirtualModel.ToString();
+
+            try
+            {
+                m_spel.SetVar("b_IsVirtualModel", IsVirtualModel);
+            }
+            catch (SpelException ex)
+            {
+                // throw ex;
+                MessageBox.Show(ex.Message);
+            }
+             
+        }
     }
 
-
+    public enum ProcessMode
+    {
+        PickBlowFirst =1,
+        PlaceElementFirst = 2
+    }
     public enum StageState
     {
         Init = 0,
