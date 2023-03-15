@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "Demo1.csproj", "{8
 		{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA} = {D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlueNet.MMM.AutoTransferring.EpsonRobot", "..\GlueNet.MMM.AutoTransferring.EpsonRobot\GlueNet.MMM.AutoTransferring.EpsonRobot.csproj", "{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlueNet.MMM.AutoTransferring.EpsonRobot", "GlueNet.MMM.AutoTransferring.EpsonRobot\GlueNet.MMM.AutoTransferring.EpsonRobot.csproj", "{D4F98EEF-809B-4ECF-B415-4CBD060E8FAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
