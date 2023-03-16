@@ -48,7 +48,7 @@ namespace GlueNet.MMM.AutoTransferring.EpsonRobot
             m_spel.Dispose();
         }
 
-        public void AE01_MovetoLasermeasurement(float ccdX, float ccdY)
+        public void AE01_SensorMoveGetElements(float ccdX, float ccdY)
         {
 
             AddLog(" ===== AE01 =====");
@@ -153,7 +153,7 @@ namespace GlueNet.MMM.AutoTransferring.EpsonRobot
 
         }
 
-        public void AE03_MovetoElementPickAndBlowWaitArea(float g_CcdX, float g_CcdY, float g_CcdZ)
+        public void AE03_NozzleMoveGetElement(float g_CcdX, float g_CcdY, float g_CcdZ)
         {
             // 1.Set  g_CcdX,  g_CcdY
             AddLog("===== AE03 =====");
@@ -211,7 +211,7 @@ namespace GlueNet.MMM.AutoTransferring.EpsonRobot
 
         }
 
-        public void AE04_MovetoNGArea()
+        public void AE04_MoveNgPosition()
         {
             AddLog("===== AE04 =====");
 

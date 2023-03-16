@@ -78,10 +78,10 @@ namespace Demo1
 
         static List<ProcessFinishTbl> FinishArea = new List<ProcessFinishTbl>();
 
-       static List<BlowAirStage> WorkingBlowStage = new List<BlowAirStage>
+       static List<BlowAirStageTbl> WorkingBlowStage = new List<BlowAirStageTbl>
         {
-           new BlowAirStage { Id=1, BlowLocationStatus = BlowLocationState.Init, ElementId=0 },
-           new BlowAirStage { Id=2, BlowLocationStatus = BlowLocationState.Init, ElementId=0  }
+           new BlowAirStageTbl { Id=1, BlowLocationStatus = BlowLocationState.Init, ElementId=0 },
+           new BlowAirStageTbl { Id=2, BlowLocationStatus = BlowLocationState.Init, ElementId=0  }
         };
 
 
@@ -206,7 +206,7 @@ namespace Demo1
                 m_spel.ServerInstance = 1;
                 m_spel.Initialize();
 
-                 m_spel.Project = @"C:\EpsonRC70\projects\API_Demos\Glue_20230315_OK\Glue_20230315_OK.sprj";
+                 m_spel.Project = @"C:\EpsonRC70\projects\Glue_20230314_OK\Glue_20230314_OK.sprj";
               // m_spel.Project = @"C:\EpsonRC70\projects\API_DEMO2\Glue_20230307\Glue_20230307.sprj";
                 m_spel.EventReceived += new Spel.EventReceivedEventHandler(m_spel_EventReceived);
 
@@ -642,7 +642,7 @@ namespace Demo1
         {
             float g_CcdX = (float)Convert.ToDouble(txtStep1_g_CcdX.Text);
             float g_CcdY = (float)Convert.ToDouble(txtStep1_g_CcdY.Text);
-            epsonRobot.AE01_MovetoLasermeasurement(g_CcdX, g_CcdY);
+            epsonRobot.AE01_SensorMoveGetElements(g_CcdX, g_CcdY);
         }
 
 
@@ -784,7 +784,7 @@ namespace Demo1
             float g_CcdX = (float)Convert.ToDouble(txtStep3_g_CcdX.Text);
             float g_CcdY = (float)Convert.ToDouble(txtStep3_g_CcdY.Text);
             float g_CcdZ = (float)Convert.ToDouble(txtStep3_g_CcdZ.Text);
-            epsonRobot.AE03_MovetoElementPickAndBlowWaitArea(g_CcdX, g_CcdY, g_CcdZ);
+            epsonRobot.AE03_NozzleMoveGetElement(g_CcdX, g_CcdY, g_CcdZ);
 
 
         }
@@ -935,7 +935,7 @@ namespace Demo1
 
         private  void BtnMovetoNGArea_Click(object sender, EventArgs e)
         {
-            epsonRobot.AE04_MovetoNGArea();
+            epsonRobot.AE04_MoveNgPosition();
 
         }
 
@@ -1010,6 +1010,7 @@ namespace Demo1
             StageStatus = StageState.WaitPickOrPlaceOrProcess;
             if (StageStatus == StageState.WaitPickOrPlaceOrProcess)
             {
+                this.Invoke(new Action(() => lblStageStatus.Text = StageStatus.ToString()));
                 this.Invoke(new Action(() => lblStageStatus.BackColor = Color.LimeGreen));
             }
             //  while (BlowAir_Working_loop)
@@ -1027,8 +1028,13 @@ namespace Demo1
                 {
                     BlowStage_process.BlowLocationStatus = BlowLocationState.Process;
                     StageStatus = StageState.Processing;
-                    this.Invoke(new Action(() => lblStageStatus.Text = StageStatus.ToString()));
-                    this.Invoke(new Action(() => lblStageStatus.BackColor = Color.LightPink));
+                    this.Invoke(new Action(() =>
+                        {
+                            lblStageStatus.Text = StageStatus.ToString();
+                            lblStageStatus.BackColor = Color.LightPink ;
+                        }));
+
+
                     DumpSystemStatus();
                     SpinWait.SpinUntil(() => false, 100);
                     // Motion control 
@@ -1040,7 +1046,7 @@ namespace Demo1
                     Console.WriteLine("2. 吹氣 ElementID:" + BlowStage_process.ElementId.ToString());
                     Console.WriteLine("3. 吹 N 秒結束吹氣, 並將狀態改為 ReadyToPick");
                     Console.WriteLine("4. 移動到吹氣等待區");
-                    SpinWait.SpinUntil(() => false, 12000);
+                    SpinWait.SpinUntil(() => false, 4000);
                     // Change Process --> ReadyPick
                     BlowStage_process.BlowLocationStatus = BlowLocationState.RedayToPick;                    
                     StageStatus = StageState.WaitPickOrPlaceOrProcess;
@@ -1115,7 +1121,7 @@ namespace Demo1
                                 processFinishRow.Go_NG = myProcessArea.Go_NG;
 
                                 FinishArea.Add(processFinishRow);
-                                this.Invoke(new Action(() => RobotElementId.Text = "0"));
+                                this.Invoke(new Action(() =>  RobotElementId.Text = "0" ));
                             }
                            
                             ContinueActionControl();
@@ -1150,7 +1156,7 @@ namespace Demo1
                         Console.WriteLine("StageStatus:" + StageStatus.ToString());
                         TextBoxTextAppendChange("txtLog", "Process Element:" + SelectProcessArea.ElementId);
 
-                        epsonRobot.AE01_MovetoLasermeasurement((float)285.433, (float)-14.416);
+                        epsonRobot.AE01_SensorMoveGetElements((float)285.433, (float)-14.416);
 
                         // 3.LaserMeasurementHeight = Get LaserMeasurement Value
                         SendUdpMessage("AE01.3 LaserMeasurementHeight");
@@ -1168,7 +1174,7 @@ namespace Demo1
 
                        
 
-                        epsonRobot.AE03_MovetoElementPickAndBlowWaitArea((float)285.808, (float)35.384, (float)-104.416);
+                        epsonRobot.AE03_NozzleMoveGetElement((float)285.808, (float)35.384, (float)-104.416);
 
                         //  將取走 Element PickFinished 標記為 1                        
                         if (SelectProcessArea != null)
@@ -1206,7 +1212,7 @@ namespace Demo1
                                         
                                         if (myWorkingBlowStagePlace.Id== 1) { this.Invoke(new Action(() => StageElementId1.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
                                         if (myWorkingBlowStagePlace.Id == 2) { this.Invoke(new Action(() => StageElementId2.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
-                                        
+                                        this.Invoke(new Action(() => RobotElementId.Text = "0"));
                                         DumpSystemStatus();
                                         ContinueActionControl();
                                     }
@@ -1223,7 +1229,9 @@ namespace Demo1
                                         
                                         if (myWorkingBlowStagePlace.Id == 1) { this.Invoke(new Action(() => StageElementId1.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
                                         if (myWorkingBlowStagePlace.Id == 2) { this.Invoke(new Action(() => StageElementId2.Text = myWorkingBlowStagePlace.ElementId.ToString())); }
-                                        
+
+                                        this.Invoke(new Action(() => RobotElementId.Text = "0"));
+
                                         DumpSystemStatus();
                                         ContinueActionControl();
                                     }
@@ -1234,7 +1242,7 @@ namespace Demo1
                         else
                         {
                             #region Element_NG process
-                            epsonRobot.AE04_MovetoNGArea();
+                            epsonRobot.AE04_MoveNgPosition();
 
                             //  將取走 Drop PlaceOrThrowFinished 標記為 1                           
                             if (SelectProcessArea != null)
@@ -1645,7 +1653,7 @@ namespace Demo1
         Shutdown = 6
     }
 
-    public class BlowAirStage
+    public class BlowAirStageTbl
     {
         public int Id { get; set; }
         public BlowLocationState BlowLocationStatus { get; set; }
